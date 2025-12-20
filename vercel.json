@@ -4,7 +4,8 @@
       "source": "/models/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Content-Type", "value": "model/gltf-binary" }
+        { "key": "Access-Control-Allow-Methods", "value": "GET, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "*" }
       ]
     }
   ]
