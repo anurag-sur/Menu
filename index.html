@@ -2,26 +2,18 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Simple 3D Test</title>
+  <title>AR Food Menu</title>
+
   <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
+
   <style>
-    body { margin:0; font-family:Arial; }
-    #info {
-      position:absolute;
-      top:20px;
-      left:50%;
-      transform:translateX(-50%);
-      background:rgba(0,0,0,0.8);
-      color:white;
-      padding:12px 20px;
-      border-radius:12px;
-      z-index:999;
-      text-align:center;
-    }
+    body { margin:0; overflow:hidden; font-family:Arial; }
+
     .btn {
       position:absolute;
       bottom:20px;
-      padding:12px 20px;
+      padding:10px 16px;
       background:rgba(0,0,0,0.85);
       color:white;
       border:none;
@@ -30,131 +22,195 @@
       z-index:999;
       cursor:pointer;
     }
-    #prev { left:20px; }
-    #next { right:20px; }
+
+    #left { left:15px; }
+    #right { right:15px; }
+    #rate { left:50%; transform:translateX(-50%); }
+
+    #info {
+      position:absolute;
+      top:20px;
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(0,0,0,0.75);
+      color:white;
+      padding:8px 14px;
+      border-radius:12px;
+      font-size:16px;
+      z-index:999;
+    }
+
+    #ratingMenu {
+      position:absolute;
+      bottom:80px;
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(0,0,0,0.85);
+      padding:8px 14px;
+      border-radius:12px;
+      display:none;
+      z-index:1000;
+    }
+
+    .star {
+      font-size:25px;
+      color:white;
+      cursor:pointer;
+    }
   </style>
 </head>
+
 <body>
 
-<div id="info">Loading Duck...</div>
-<button id="prev" class="btn">◀ Previous</button>
-<button id="next" class="btn">Next ▶</button>
+<div id="info">Burger • ₹149</div>
 
-<!-- Simple A-Frame scene without AR -->
-<a-scene background="color: #87CEEB">
-  <!-- Lighting -->
+<button id="left" class="btn">◀</button>
+<button id="rate" class="btn">Rate</button>
+<button id="right" class="btn">▶</button>
+
+<div id="ratingMenu">
+  <span class="star" data-star="1">★</span>
+  <span class="star" data-star="2">★</span>
+  <span class="star" data-star="3">★</span>
+  <span class="star" data-star="4">★</span>
+  <span class="star" data-star="5">★</span>
+</div>
+
+<a-scene embedded vr-mode-ui="enabled:false"
+         arjs="sourceType:webcam; debugUIEnabled:false;">
+
+  <!-- LIGHTS -->
   <a-entity light="type: ambient; intensity: 0.8"></a-entity>
-  <a-entity light="type: directional; intensity: 0.5" position="2 4 2"></a-entity>
-  
-  <!-- Camera -->
-  <a-entity camera position="0 1.6 3" look-controls></a-entity>
-  
-  <!-- Ground plane for reference -->
-  <a-plane position="0 0 0" rotation="-90 0 0" width="10" height="10" color="#7BC8A4"></a-plane>
-  
-  <!-- Model holder -->
-  <a-entity id="model-holder" position="0 1 0"></a-entity>
+  <a-entity light="type: directional; intensity: 0.4" position="1 2 1"></a-entity>
+
+  <a-entity camera></a-entity>
+  <a-entity id="holder" position="0 0 -4"></a-entity>
+
 </a-scene>
 
 <script>
 // Wait for A-Frame to load
 window.addEventListener('load', function() {
 
-const models = [
-  { 
-    url: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Duck/glTF-Binary/Duck.glb",
-    name: "Duck",
-    scale: "0.1 0.1 0.1"
-  },
-  { 
-    url: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF-Binary/Avocado.glb",
-    name: "Avocado",
-    scale: "50 50 50"
-  },
-  { 
-    url: "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/BoomBox/glTF-Binary/BoomBox.glb",
-    name: "BoomBox",
-    scale: "100 100 100"
-  },
-  { 
-    url: "models/burger.glb",
-    name: "Burger",
-    scale: "0.4 0.4 0.4"
-  },
-  { 
-    url: "models/pizza.glb",
-    name: "Pizza",
-    scale: "2 2 2"
-  },
-  { 
-    url: "models/fries.glb",
-    name: "Fries",
-    scale: "0.5 0.5 0.5"
-  }
+const foods = [
+  { model:"models/burger/scene.gltf", name:"Burger", price:"₹149", scale:0.4 },
+  { model:"models/pizza/scene.gltf",  name:"Pizza",  price:"₹299", scale:2.0 },
+  { model:"models/fries/scene.gltf",  name:"Fries",  price:"₹99",  scale:0.5 }
 ];
 
-let currentIndex = 0;
-const holder = document.getElementById('model-holder');
-const info = document.getElementById('info');
+const holder = document.getElementById("holder");
+const info = document.getElementById("info");
+const ratingMenu = document.getElementById("ratingMenu");
 
-// Create model entity
-const modelEntity = document.createElement('a-entity');
-modelEntity.setAttribute('rotation', '0 0 0');
-holder.appendChild(modelEntity);
+let index = 0;
+let model = document.createElement("a-entity");
+holder.appendChild(model);
 
-// Auto-rotate component
-AFRAME.registerComponent('auto-spin', {
-  tick: function (time) {
-    this.el.setAttribute('rotation', {
-      x: 0,
-      y: time * 0.05,
-      z: 0
-    });
+let scale = foods[0].scale;
+let yaw = 0, pitch = 0;
+let autoRotate = true;
+
+/* LOAD FOOD */
+function loadFood(i) {
+  model.setAttribute("gltf-model", foods[i].model);
+  scale = foods[i].scale;
+  model.object3D.scale.set(scale,scale,scale);
+  yaw = pitch = 0;
+  info.innerText = `${foods[i].name} • ${foods[i].price}`;
+}
+
+// Listen for successful loads
+model.addEventListener('model-loaded', () => {
+  console.log('✓ Model loaded successfully!');
+});
+
+model.addEventListener('model-error', (e) => {
+  console.error('✗ Model error:', e.detail);
+  alert('Error loading model. Check console for details.');
+});
+
+loadFood(0);
+
+/* SWITCH FOOD */
+left.onclick = () => {
+  index = (index - 1 + foods.length) % foods.length;
+  loadFood(index);
+};
+
+right.onclick = () => {
+  index = (index + 1) % foods.length;
+  loadFood(index);
+};
+
+/* RATING */
+rate.onclick = () => {
+  ratingMenu.style.display =
+    ratingMenu.style.display === "block" ? "none" : "block";
+};
+
+document.querySelectorAll(".star").forEach(s=>{
+  s.onclick = ()=>{
+    alert(`Rated ${s.dataset.star} star(s)`);
+    ratingMenu.style.display="none";
+  };
+});
+
+/* TOUCH CONTROLS */
+let dragging=false,lastX=0,lastY=0,zoomStart=0;
+
+function pinch(t){
+  const dx=t[0].clientX-t[1].clientX;
+  const dy=t[0].clientY-t[1].clientY;
+  return Math.sqrt(dx*dx+dy*dy);
+}
+
+document.addEventListener("touchstart",e=>{
+  autoRotate=false;
+  if(e.touches.length===1){
+    dragging=true;
+    lastX=e.touches[0].clientX;
+    lastY=e.touches[0].clientY;
+  }
+  if(e.touches.length===2){
+    zoomStart=pinch(e.touches);
   }
 });
 
-modelEntity.setAttribute('auto-spin', '');
-
-function loadModel(index) {
-  const model = models[index];
-  info.textContent = `${model.name} (${index + 1}/${models.length})`;
-  
-  console.log(`Loading: ${model.url}`);
-  
-  modelEntity.setAttribute('gltf-model', model.url);
-  modelEntity.setAttribute('scale', model.scale);
-}
-
-// Event listeners
-modelEntity.addEventListener('model-loaded', () => {
-  console.log('✓ Model loaded successfully!');
-  info.style.background = 'rgba(0,150,0,0.8)';
-  setTimeout(() => {
-    info.style.background = 'rgba(0,0,0,0.8)';
-  }, 2000);
+document.addEventListener("touchmove",e=>{
+  if(e.touches.length===2){
+    const d=pinch(e.touches);
+    scale*=d/zoomStart;
+    scale=Math.max(0.2,Math.min(2.5,scale));
+    model.object3D.scale.set(scale,scale,scale);
+    zoomStart=d;
+    return;
+  }
+  if(dragging){
+    yaw+=(e.touches[0].clientX-lastX)*0.01;
+    pitch+=(e.touches[0].clientY-lastY)*0.01;
+    lastX=e.touches[0].clientX;
+    lastY=e.touches[0].clientY;
+    model.object3D.rotation.set(pitch,yaw,0);
+  }
 });
 
-modelEntity.addEventListener('model-error', (e) => {
-  console.error('✗ Model load error:', e.detail);
-  info.textContent = `Error loading ${models[currentIndex].name}`;
-  info.style.background = 'rgba(150,0,0,0.8)';
+document.addEventListener("touchend",()=>{
+  dragging=false;
+  setTimeout(()=>autoRotate=true,3000);
 });
 
-// Navigation
-document.getElementById('prev').onclick = () => {
-  currentIndex = (currentIndex - 1 + models.length) % models.length;
-  loadModel(currentIndex);
-};
+/* AUTO ROTATE */
+AFRAME.registerComponent("spin",{
+  tick:()=>{
+    if(autoRotate){
+      yaw+=0.003;
+      model.object3D.rotation.y=yaw;
+    }
+  }
+});
+model.setAttribute("spin","");
 
-document.getElementById('next').onclick = () => {
-  currentIndex = (currentIndex + 1) % models.length;
-  loadModel(currentIndex);
-};
-
-// Load first model
-loadModel(0);
-
-}); // End of window.addEventListener('load')
+}); // End window.addEventListener
 </script>
 
 </body>
