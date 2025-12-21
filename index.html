@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <title>AR Food Menu</title>
 
-<!-- Core -->
+<!-- DO NOT CHANGE -->
 <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
 
@@ -12,145 +12,119 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-*{box-sizing:border-box}
+*{ box-sizing:border-box; }
+
 body{
-  margin:0; overflow:hidden;
+  margin:0;
+  overflow:hidden;
   font-family:'Inter',sans-serif;
-  background:radial-gradient(circle at top,#111,#000);
+  background:#0b0b0c;
+  color:white;
 }
 
-/* macOS glass */
-.glass{
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(30px) saturate(180%);
-  border:1px solid rgba(255,255,255,.18);
-  box-shadow:
-    0 30px 60px rgba(0,0,0,.45),
-    inset 0 1px 0 rgba(255,255,255,.2);
-}
-
-/* Buttons */
-.btn{
-  position:absolute;
-  bottom:28px;
-  padding:14px 26px;
-  border-radius:22px;
-  font-size:18px;
-  font-weight:600;
-  color:#fff;
-  cursor:pointer;
-  transition:.25s cubic-bezier(.2,.8,.2,1);
-}
-.btn:hover{transform:translateY(-2px) scale(1.02)}
-.btn:active{transform:scale(.96)}
-
-#left{left:20px}
-#right{right:20px}
-#rate{
-  left:50%; transform:translateX(-50%);
-  background:linear-gradient(135deg,#ff7a18,#ffb347);
-}
-
-/* Info */
+/* ---------- Top Info ---------- */
 #info{
   position:absolute;
-  top:24px; left:50%;
+  top:20px;
+  left:50%;
   transform:translateX(-50%);
-  padding:16px 30px;
-  border-radius:26px;
-  font-size:20px;
+  padding:10px 18px;
+  background:rgba(20,20,22,.85);
+  border-radius:14px;
+  font-size:16px;
   font-weight:600;
-  color:#fff;
-  transition:.4s ease;
+  z-index:5;
 }
 
-/* Loading */
-#loading{
-  position:absolute; inset:0;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  background:rgba(0,0,0,.55);
-  backdrop-filter:blur(12px);
-  z-index:20;
+/* ---------- Buttons ---------- */
+.btn{
+  position:absolute;
+  bottom:20px;
+  padding:12px 18px;
+  background:rgba(30,30,32,.9);
+  border:1px solid rgba(255,255,255,.12);
+  color:white;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .15s, transform .1s;
 }
-.loader{
-  width:56px;height:56px;
-  border:4px solid rgba(255,255,255,.2);
-  border-top:4px solid #fff;
-  border-radius:50%;
-  animation:spin 1s linear infinite;
+.btn:active{
+  transform:scale(.96);
+  background:rgba(50,50,55,.95);
 }
-@keyframes spin{to{transform:rotate(360deg)}}
 
-/* Rating */
+#left{ left:16px; }
+#right{ right:16px; }
+#rate{
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* ---------- Rating ---------- */
 #ratingMenu{
   position:absolute;
-  bottom:96px; left:50%;
-  transform:translateX(-50%) scale(.9);
-  padding:18px 26px;
-  border-radius:28px;
+  bottom:78px;
+  left:50%;
+  transform:translateX(-50%);
+  padding:10px 16px;
+  background:rgba(20,20,22,.92);
+  border-radius:16px;
   display:none;
-  opacity:0;
-  transition:.35s cubic-bezier(.2,.8,.2,1);
+  z-index:5;
 }
-#ratingMenu.show{
-  display:block;
-  opacity:1;
-  transform:translateX(-50%) scale(1);
-}
-.star{
-  font-size:38px;
-  margin:0 5px;
-  color:rgba(255,255,255,.25);
-  cursor:pointer;
-  transition:.2s cubic-bezier(.2,.8,.2,1);
-}
-.star.active{color:#ffd859;transform:scale(1.25)}
-.star:hover{color:#ffe082}
 
-/* Toast */
+.star{
+  font-size:28px;
+  cursor:pointer;
+  color:rgba(255,255,255,.25);
+  transition:color .15s, transform .1s;
+}
+.star.active{ color:#FFD54F; }
+.star:active{ transform:scale(1.2); }
+
+/* ---------- Toast ---------- */
 #toast{
   position:absolute;
-  top:110px; left:50%;
-  transform:translateX(-50%) translateY(-18px);
-  padding:14px 26px;
-  border-radius:22px;
-  font-weight:600;
-  color:#fff;
-  background:linear-gradient(135deg,#34d399,#059669);
+  top:72px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#1f7aff;
+  padding:8px 14px;
+  border-radius:12px;
+  font-size:14px;
   opacity:0;
-  transition:.35s cubic-bezier(.2,.8,.2,1);
-}
-#toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
+  transition:opacity .3s;
+  z-index:6;
 }
 
-/* Hint */
-#hint{
+/* ---------- Loading ---------- */
+#loading{
   position:absolute;
-  bottom:130px; left:50%;
-  transform:translateX(-50%);
-  font-size:14px;
-  color:rgba(255,255,255,.6);
-  animation:pulse 2s infinite;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0b0b0c;
+  z-index:10;
+  font-size:18px;
+  font-weight:600;
 }
-@keyframes pulse{50%{opacity:.9}}
 </style>
 </head>
 
 <body>
 
-<div id="info" class="glass"></div>
-<div id="loading"><div class="loader"></div><div style="margin-top:14px;color:#fff">Loading…</div></div>
+<div id="info"></div>
 <div id="toast"></div>
-<div id="hint">Drag • Pinch • Tilt • Double-Tap</div>
+<div id="loading">Loading model…</div>
 
-<button id="left" class="btn glass">◀</button>
-<button id="rate" class="btn glass">Rate</button>
-<button id="right" class="btn glass">▶</button>
+<button id="left" class="btn">◀</button>
+<button id="rate" class="btn">Rate</button>
+<button id="right" class="btn">▶</button>
 
-<div id="ratingMenu" class="glass">
+<div id="ratingMenu">
   <span class="star" data-s="1">★</span>
   <span class="star" data-s="2">★</span>
   <span class="star" data-s="3">★</span>
@@ -159,141 +133,141 @@ body{
 </div>
 
 <a-scene embedded vr-mode-ui="enabled:false"
- arjs="sourceType:webcam;debugUIEnabled:false;">
-  <a-entity light="type:ambient;intensity:.9"></a-entity>
-  <a-entity light="type:directional;intensity:.4" position="1 2 1"></a-entity>
+         arjs="sourceType:webcam; debugUIEnabled:false;">
+
+  <a-entity light="type:ambient;intensity:0.8"></a-entity>
+  <a-entity light="type:directional;intensity:0.4" position="1 2 1"></a-entity>
+
   <a-entity camera></a-entity>
   <a-entity id="holder" position="0 0 -4"></a-entity>
 </a-scene>
 
 <script>
-/* DATA */
 const foods=[
  {model:"models/burger/scene.gltf",name:"Burger",price:"₹149",scale:.4},
  {model:"models/pizza/scene.gltf",name:"Pizza",price:"₹299",scale:2},
  {model:"models/fries/scene.gltf",name:"Fries",price:"₹99",scale:.5}
 ];
 
-/* STATE */
-let index=0;
-let yaw=0,pitch=0,vy=0,vp=0;
-let scale=foods[0].scale;
-let auto=true;
-let ratings=[0,0,0];
-
-/* DOM */
 const holder=document.getElementById("holder");
 const info=document.getElementById("info");
 const loading=document.getElementById("loading");
 const toast=document.getElementById("toast");
 const ratingMenu=document.getElementById("ratingMenu");
-const hint=document.getElementById("hint");
 
-/* MODEL */
+let index=0, rating=0;
+let yaw=0,pitch=0,scale=foods[0].scale;
+let autoRotate=true;
+
 const model=document.createElement("a-entity");
 holder.appendChild(model);
 
-/* HELPERS */
-const toastMsg=t=>{
+/* ---------- Helpers ---------- */
+function showToast(t){
  toast.textContent=t;
- toast.classList.add("show");
- setTimeout(()=>toast.classList.remove("show"),1400);
-};
-const updateStars=()=>{
- document.querySelectorAll(".star").forEach(s=>{
-  s.classList.toggle("active",s.dataset.s<=ratings[index]);
- });
-};
+ toast.style.opacity=1;
+ setTimeout(()=>toast.style.opacity=0,1200);
+}
 
-/* LOAD */
+function updateStars(){
+ document.querySelectorAll(".star").forEach(s=>{
+  s.classList.toggle("active",s.dataset.s<=rating);
+ });
+}
+
+/* ---------- Load ---------- */
 function loadFood(i){
  loading.style.display="flex";
  model.setAttribute("gltf-model",foods[i].model);
  scale=foods[i].scale;
  model.object3D.scale.set(scale,scale,scale);
- yaw=pitch=vy=vp=0;
+ yaw=pitch=0;
  info.textContent=`${foods[i].name} • ${foods[i].price}`;
+ rating=0;
  updateStars();
 }
-model.addEventListener("model-loaded",()=>loading.style.display="none");
+
+model.addEventListener("model-loaded",()=>{
+ loading.style.display="none";
+});
+
 loadFood(0);
 
-/* NAV */
-left.onclick=()=>{index=(index+foods.length-1)%foods.length;loadFood(index);}
-right.onclick=()=>{index=(index+1)%foods.length;loadFood(index);}
-rate.onclick=()=>ratingMenu.classList.toggle("show");
+/* ---------- UI ---------- */
+left.onclick=()=>{ index=(index+foods.length-1)%foods.length; loadFood(index); }
+right.onclick=()=>{ index=(index+1)%foods.length; loadFood(index); }
 
-/* STARS */
+rate.onclick=()=>{
+ ratingMenu.style.display =
+ ratingMenu.style.display==="block"?"none":"block";
+};
+
 document.querySelectorAll(".star").forEach(s=>{
  s.onclick=()=>{
-  ratings[index]=s.dataset.s;
+  rating=s.dataset.s;
   updateStars();
-  toastMsg(`Rated ${ratings[index]} ★`);
+  showToast(`Rated ${rating} ★`);
  };
 });
 
-/* TOUCH PHYSICS */
-let dragging=false,lx=0,ly=0,zoom=0,lastTap=0;
-const dist=t=>Math.hypot(
- t[0].clientX-t[1].clientX,
- t[0].clientY-t[1].clientY
-);
+/* ---------- Input (Touch + Mouse) ---------- */
+let dragging=false,lx=0,ly=0,zoom=0;
 
-document.addEventListener("touchstart",e=>{
- auto=false; hint.style.display="none";
- const now=Date.now();
- if(now-lastTap<300){ yaw=0; pitch=0; } // double-tap reset
- lastTap=now;
-
- if(e.touches.length===1){
-  dragging=true;
-  lx=e.touches[0].clientX;
-  ly=e.touches[0].clientY;
- }
- if(e.touches.length===2) zoom=dist(e.touches);
-});
-
-document.addEventListener("touchmove",e=>{
- if(e.touches.length===2){
-  const d=dist(e.touches);
-  scale+= (d-zoom)*0.002;
-  scale=Math.max(.2,Math.min(2.6,scale));
-  model.object3D.scale.set(scale,scale,scale);
-  zoom=d; return;
- }
- if(dragging){
-  vy=(e.touches[0].clientX-lx)*.001;
-  vp=(e.touches[0].clientY-ly)*.001;
-  lx=e.touches[0].clientX;
-  ly=e.touches[0].clientY;
- }
-});
-
-document.addEventListener("touchend",()=>{
- dragging=false;
- setTimeout(()=>auto=true,2500);
-});
-
-/* GYRO */
-if(window.DeviceOrientationEvent){
- window.addEventListener("deviceorientation",e=>{
-  if(!dragging){
-   yaw+=e.gamma*0.0002;
-   pitch+=e.beta*0.0002;
-  }
- });
+function dist(a,b){
+ const dx=a.clientX-b.clientX;
+ const dy=a.clientY-b.clientY;
+ return Math.sqrt(dx*dx+dy*dy);
 }
 
-/* FRAME LOOP */
-AFRAME.registerComponent("spin",{tick:()=>{
- vy*=0.94; vp*=0.94;
- yaw+=vy + (auto?0.002:0);
- pitch=Math.max(-1.4,Math.min(1.4,pitch+vp));
+function start(x,y){
+ dragging=true; lx=x; ly=y; autoRotate=false;
+}
+function move(x,y){
+ yaw+=(x-lx)*0.01;
+ pitch+=(y-ly)*0.01;
+ pitch=Math.max(-1.4,Math.min(1.4,pitch));
+ lx=x; ly=y;
  model.object3D.rotation.set(pitch,yaw,0);
+}
+function end(){
+ dragging=false;
+ setTimeout(()=>autoRotate=true,2000);
+}
 
- // subtle idle breathing
- const b=1+Math.sin(Date.now()*0.002)*0.01;
- model.object3D.scale.set(scale*b,scale*b,scale*b);
+/* Touch */
+document.addEventListener("touchstart",e=>{
+ if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY);
+ if(e.touches.length===2) zoom=dist(e.touches[0],e.touches[1]);
+});
+document.addEventListener("touchmove",e=>{
+ if(e.touches.length===2){
+  const d=dist(e.touches[0],e.touches[1]);
+  scale*=d/zoom;
+  scale=Math.max(.2,Math.min(2.5,scale));
+  model.object3D.scale.set(scale,scale,scale);
+  zoom=d;
+ }
+ if(dragging && e.touches.length===1)
+  move(e.touches[0].clientX,e.touches[0].clientY);
+});
+document.addEventListener("touchend",end);
+
+/* Mouse */
+document.addEventListener("mousedown",e=>start(e.clientX,e.clientY));
+document.addEventListener("mousemove",e=>dragging&&move(e.clientX,e.clientY));
+document.addEventListener("mouseup",end);
+document.addEventListener("wheel",e=>{
+ scale+=e.deltaY*-0.001;
+ scale=Math.max(.2,Math.min(2.5,scale));
+ model.object3D.scale.set(scale,scale,scale);
+});
+
+/* Auto rotate */
+AFRAME.registerComponent("spin",{tick:()=>{
+ if(autoRotate){
+  yaw+=0.002;
+  model.object3D.rotation.y=yaw;
+ }
 }});
 model.setAttribute("spin","");
 </script>
