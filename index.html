@@ -51,15 +51,15 @@ body{
 
 #left{ left:16px; }
 #right{ right:16px; }
+
+/* Side-by-side center buttons */
 #rate{
   left:50%;
-  transform:translateX(-50%);
+  transform:translateX(-110%);
 }
-
 #addCart{
-  bottom:84px;
   left:50%;
-  transform:translateX(-50%);
+  transform:translateX(10%);
 }
 
 /* ---------- Rating ---------- */
@@ -124,11 +124,6 @@ body{
   z-index:6;
 }
 
-#cart h3{
-  margin:0 0 8px;
-  font-size:16px;
-}
-
 .cart-item{
   display:flex;
   justify-content:space-between;
@@ -152,8 +147,8 @@ body{
   cursor:pointer;
 }
 
-a-scene { pointer-events:none; }
-#info,#toast,.btn,#ratingMenu,.star,#cart { pointer-events:auto; }
+a-scene{ pointer-events:none; }
+#info,#toast,.btn,#ratingMenu,.star,#cart{ pointer-events:auto; }
 </style>
 </head>
 
@@ -165,8 +160,8 @@ a-scene { pointer-events:none; }
 
 <button id="left" class="btn">◀</button>
 <button id="rate" class="btn">Rate</button>
-<button id="right" class="btn">▶</button>
 <button id="addCart" class="btn">Add to Cart</button>
+<button id="right" class="btn">▶</button>
 
 <div id="ratingMenu">
   <span class="star" data-s="1">★</span>
@@ -196,20 +191,13 @@ const foods=[
  {model:"models/burger/scene.gltf",name:"Burger",price:"₹149",scale:.4},
  {model:"models/pizza/scene.gltf",name:"Pizza",price:"₹299",scale:2},
  {model:"models/fries/scene.gltf",name:"Fries",price:"₹99",scale:.5},
- {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:"₹129",scale:6},
- {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:"₹89",scale:6},
- {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:"₹49",scale:6},
- {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:"₹79",scale:6},
- {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:"₹89",scale:.01},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:"₹39",scale:.5},
- {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:"₹69",scale:.2}
+ {model:"models/samosa/scene.gltf",name:"Samosa",price:"₹39",scale:.5}
 ];
 
 const holder=document.getElementById("holder");
 const info=document.getElementById("info");
 const loading=document.getElementById("loading");
 const toast=document.getElementById("toast");
-const ratingMenu=document.getElementById("ratingMenu");
 
 const cartBtn=document.getElementById("addCart");
 const cartBox=document.getElementById("cart");
@@ -220,21 +208,17 @@ const clearCartBtn=document.getElementById("clearCart");
 let index=0,rating=0;
 let yaw=0,pitch=0,scale=foods[0].scale;
 let autoRotate=true;
+let dragging=false,lx=0,ly=0;
 let cart=[];
 
 const model=document.createElement("a-entity");
 holder.appendChild(model);
 
+/* ---------- Helpers ---------- */
 function showToast(t){
  toast.textContent=t;
  toast.style.opacity=1;
  setTimeout(()=>toast.style.opacity=0,1200);
-}
-
-function updateStars(){
- document.querySelectorAll(".star").forEach(s=>{
-  s.classList.toggle("active",s.dataset.s<=rating);
- });
 }
 
 function renderCart(){
@@ -244,17 +228,17 @@ function renderCart(){
   total+=item.price*item.qty;
   const div=document.createElement("div");
   div.className="cart-item";
-  div.innerHTML=`<span>${item.name} x${item.qty}</span><span onclick="removeItem(${i})">❌</span>`;
+  div.innerHTML=`${item.name} x${item.qty} <span onclick="removeItem(${i})">❌</span>`;
   cartItemsDiv.appendChild(div);
  });
  cartTotalDiv.textContent=`Total: ₹${total}`;
 }
-
 function removeItem(i){
  cart.splice(i,1);
  renderCart();
 }
 
+/* ---------- Load ---------- */
 function loadFood(i){
  loading.style.display="flex";
  model.setAttribute("gltf-model",foods[i].model);
@@ -262,34 +246,24 @@ function loadFood(i){
  model.object3D.scale.set(scale,scale,scale);
  yaw=pitch=0;
  info.textContent=`${foods[i].name} • ${foods[i].price}`;
- rating=0;
- updateStars();
 }
-
 model.addEventListener("model-loaded",()=>loading.style.display="none");
 loadFood(0);
 
+/* ---------- UI ---------- */
 left.onclick=()=>{ index=(index+foods.length-1)%foods.length; loadFood(index); }
 right.onclick=()=>{ index=(index+1)%foods.length; loadFood(index); }
 
 rate.onclick=()=>{
- ratingMenu.style.display=ratingMenu.style.display==="block"?"none":"block";
+ ratingMenu.style.display =
+ ratingMenu.style.display==="block"?"none":"block";
 };
-
-document.querySelectorAll(".star").forEach(s=>{
- s.onclick=()=>{
-  rating=s.dataset.s;
-  updateStars();
-  showToast(`Rated ${rating} ★`);
- };
-});
 
 cartBtn.onclick=()=>{
  const item=foods[index];
  const price=parseInt(item.price.replace("₹",""));
- const existing=cart.find(c=>c.name===item.name);
- if(existing) existing.qty++;
- else cart.push({name:item.name,price,qty:1});
+ const found=cart.find(c=>c.name===item.name);
+ found ? found.qty++ : cart.push({name:item.name,price,qty:1});
  cartBox.style.display="block";
  renderCart();
  showToast("Added to cart");
@@ -301,6 +275,31 @@ clearCartBtn.onclick=()=>{
  showToast("Cart cleared");
 };
 
+/* ---------- Mouse Rotation + Zoom ---------- */
+document.addEventListener("mousedown",e=>{
+ dragging=true;
+ lx=e.clientX; ly=e.clientY;
+ autoRotate=false;
+});
+document.addEventListener("mousemove",e=>{
+ if(!dragging) return;
+ yaw+=(e.clientX-lx)*0.01;
+ pitch+=(e.clientY-ly)*0.01;
+ pitch=Math.max(-1.4,Math.min(1.4,pitch));
+ lx=e.clientX; ly=e.clientY;
+ model.object3D.rotation.set(pitch,yaw,0);
+});
+document.addEventListener("mouseup",()=>{
+ dragging=false;
+ setTimeout(()=>autoRotate=true,2000);
+});
+document.addEventListener("wheel",e=>{
+ scale+=e.deltaY*-0.001;
+ scale=Math.max(.2,2.5,scale);
+ model.object3D.scale.set(scale,scale,scale);
+});
+
+/* ---------- Auto Rotate ---------- */
 AFRAME.registerComponent("spin",{tick:()=>{
  if(autoRotate){
   yaw+=0.002;
