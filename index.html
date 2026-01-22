@@ -4,11 +4,10 @@
 <meta charset="utf-8">
 <title>AR Food Menu</title>
 
-<!-- DO NOT CHANGE -->
+<!-- DO NOT CHANGE (LOCKED VERSIONS) -->
 <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
 <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
 
-<!-- Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -25,52 +24,51 @@ body{
 /* ---------- Top Info ---------- */
 #info{
   position:absolute;
-  top:20px;
+  top:18px;
   left:50%;
   transform:translateX(-50%);
-  padding:10px 18px;
-  background:rgba(20,20,22,.85);
-  border-radius:14px;
+  padding:10px 20px;
+  background:rgba(25,25,30,.75);
+  backdrop-filter:blur(12px);
+  border-radius:16px;
   font-size:16px;
   font-weight:600;
   z-index:5;
+  transition:opacity .2s, transform .2s;
 }
 
 /* ---------- Buttons ---------- */
 .btn{
   position:absolute;
-  bottom:20px;
-  padding:12px 18px;
-  background:rgba(30,30,32,.9);
+  bottom:18px;
+  padding:12px 20px;
+  background:linear-gradient(145deg,rgba(50,50,60,.9),rgba(25,25,30,.9));
+  backdrop-filter:blur(12px);
   border:1px solid rgba(255,255,255,.12);
   color:white;
-  border-radius:14px;
+  border-radius:16px;
   font-size:16px;
   font-weight:600;
   cursor:pointer;
-  transition:background .15s, transform .1s;
+  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  transition:transform .1s;
 }
-.btn:active{
-  transform:scale(.96);
-  background:rgba(50,50,55,.95);
-}
+.btn:active{ transform:scale(.96); }
 
-#left{ left:16px; }
-#right{ right:16px; }
-#rate{
-  left:50%;
-  transform:translateX(-50%);
-}
+#left{ left:14px; }
+#right{ right:14px; }
+#rate{ left:50%; transform:translateX(-50%); }
 
 /* ---------- Rating ---------- */
 #ratingMenu{
   position:absolute;
-  bottom:78px;
+  bottom:76px;
   left:50%;
   transform:translateX(-50%);
-  padding:10px 16px;
-  background:rgba(20,20,22,.92);
-  border-radius:16px;
+  padding:10px 18px;
+  background:rgba(25,25,30,.85);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
   display:none;
   z-index:5;
 }
@@ -82,17 +80,17 @@ body{
   transition:color .15s, transform .1s;
 }
 .star.active{ color:#FFD54F; }
-.star:active{ transform:scale(1.2); }
+.star:active{ transform:scale(1.25); }
 
 /* ---------- Toast ---------- */
 #toast{
   position:absolute;
-  top:72px;
+  top:70px;
   left:50%;
   transform:translateX(-50%);
   background:#1f7aff;
   padding:8px 14px;
-  border-radius:12px;
+  border-radius:14px;
   font-size:14px;
   opacity:0;
   transition:opacity .3s;
@@ -112,18 +110,8 @@ body{
   font-weight:600;
 }
 
-a-scene {
-  pointer-events: none;
-}
-
-#info,
-#toast,
-.btn,
-#ratingMenu,
-.star {
-  pointer-events: auto;
-}
-  
+a-scene{ pointer-events:none; }
+#info,#toast,.btn,#ratingMenu,.star{ pointer-events:auto; }
 </style>
 </head>
 
@@ -148,25 +136,35 @@ a-scene {
 <a-scene embedded vr-mode-ui="enabled:false"
          arjs="sourceType:webcam; debugUIEnabled:false;">
 
-  <a-entity light="type:ambient;intensity:0.8"></a-entity>
-  <a-entity light="type:directional;intensity:0.4" position="1 2 1"></a-entity>
+  <a-assets>
+    <a-asset-item id="burger" src="models/burger/scene.gltf"></a-asset-item>
+    <a-asset-item id="pizza" src="models/pizza/scene.gltf"></a-asset-item>
+    <a-asset-item id="fries" src="models/fries/scene.gltf"></a-asset-item>
+  </a-assets>
+
+  <a-entity light="type:ambient; intensity:0.9"></a-entity>
+  <a-entity light="type:directional; intensity:0.5" position="1 2 1"></a-entity>
 
   <a-entity camera></a-entity>
-  <a-entity id="holder" position="0 0 -4"></a-entity>
+
+  <a-entity id="holder" position="0 0 -4">
+    <!-- Fake table shadow -->
+    <a-plane rotation="-90 0 0"
+             width="2"
+             height="2"
+             color="#000"
+             opacity="0.25"
+             position="0 -0.01 0">
+    </a-plane>
+  </a-entity>
+
 </a-scene>
 
 <script>
 const foods=[
- {model:"models/burger/scene.gltf",name:"Burger",price:"₹149",scale:.4},
- {model:"models/pizza/scene.gltf",name:"Pizza",price:"₹299",scale:2},
- {model:"models/fries/scene.gltf",name:"Fries",price:"₹99",scale:.5},
- {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:"₹129",scale:6},
- {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:"89",scale:6},
- {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:"₹49",scale:6},
- {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:"₹79",scale:6},
- {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:"₹89",scale:.01},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:"₹39",scale:.5},
- {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:"₹69",scale:.2}
+ {model:"#burger",name:"Burger",price:"₹149",scale:.4},
+ {model:"#pizza",name:"Pizza",price:"₹299",scale:2},
+ {model:"#fries",name:"Fries",price:"₹99",scale:.5}
 ];
 
 const holder=document.getElementById("holder");
@@ -175,14 +173,15 @@ const loading=document.getElementById("loading");
 const toast=document.getElementById("toast");
 const ratingMenu=document.getElementById("ratingMenu");
 
-let index=0, rating=0;
-let yaw=0,pitch=0,scale=foods[0].scale;
-let autoRotate=true;
+let index=0,rating=0;
+let yaw=0,pitch=0,vel=0,scale=foods[0].scale;
+let autoRotate=true,lastTap=0;
 
 const model=document.createElement("a-entity");
 holder.appendChild(model);
 
-/* ---------- Helpers ---------- */
+function vibrate(t=15){ if(navigator.vibrate) navigator.vibrate(t); }
+
 function showToast(t){
  toast.textContent=t;
  toast.style.opacity=1;
@@ -195,31 +194,41 @@ function updateStars(){
  });
 }
 
-/* ---------- Load ---------- */
+function animateInfo(text){
+ info.style.opacity=0;
+ info.style.transform="translate(-50%,-6px)";
+ setTimeout(()=>{
+  info.textContent=text;
+  info.style.opacity=1;
+  info.style.transform="translate(-50%,0)";
+ },150);
+}
+
 function loadFood(i){
  loading.style.display="flex";
  model.setAttribute("gltf-model",foods[i].model);
  scale=foods[i].scale;
- model.object3D.scale.set(scale,scale,scale);
- yaw=pitch=0;
- info.textContent=`${foods[i].name} • ${foods[i].price}`;
- rating=0;
- updateStars();
+ model.object3D.scale.set(scale*.85,scale*.85,scale*.85);
+ yaw=pitch=vel=0;
+ animateInfo(`${foods[i].name} • ${foods[i].price}`);
+ rating=0; updateStars();
+ vibrate();
 }
 
 model.addEventListener("model-loaded",()=>{
  loading.style.display="none";
+ model.object3D.scale.set(scale,scale,scale);
 });
 
 loadFood(0);
 
-/* ---------- UI ---------- */
 left.onclick=()=>{ index=(index+foods.length-1)%foods.length; loadFood(index); }
 right.onclick=()=>{ index=(index+1)%foods.length; loadFood(index); }
 
 rate.onclick=()=>{
- ratingMenu.style.display =
+ ratingMenu.style.display=
  ratingMenu.style.display==="block"?"none":"block";
+ vibrate();
 };
 
 document.querySelectorAll(".star").forEach(s=>{
@@ -227,23 +236,20 @@ document.querySelectorAll(".star").forEach(s=>{
   rating=s.dataset.s;
   updateStars();
   showToast(`Rated ${rating} ★`);
+  vibrate(25);
  };
 });
 
-/* ---------- Input (Touch + Mouse) ---------- */
-let dragging=false,lx=0,ly=0,zoom=0;
-
-function dist(a,b){
- const dx=a.clientX-b.clientX;
- const dy=a.clientY-b.clientY;
- return Math.sqrt(dx*dx+dy*dy);
-}
+/* -------- Rotation + Inertia -------- */
+let dragging=false,lx=0,ly=0;
 
 function start(x,y){
  dragging=true; lx=x; ly=y; autoRotate=false;
 }
 function move(x,y){
- yaw+=(x-lx)*0.01;
+ const dx=x-lx;
+ yaw+=dx*0.01;
+ vel=dx*0.002;
  pitch+=(y-ly)*0.01;
  pitch=Math.max(-1.4,Math.min(1.4,pitch));
  lx=x; ly=y;
@@ -254,37 +260,35 @@ function end(){
  setTimeout(()=>autoRotate=true,2000);
 }
 
-/* Touch */
-document.addEventListener("touchstart",e=>{
- if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY);
- if(e.touches.length===2) zoom=dist(e.touches[0],e.touches[1]);
-});
-document.addEventListener("touchmove",e=>{
- if(e.touches.length===2){
-  const d=dist(e.touches[0],e.touches[1]);
-  scale*=d/zoom;
-  scale=Math.max(.2,Math.min(2.5,scale));
-  model.object3D.scale.set(scale,scale,scale);
-  zoom=d;
- }
- if(dragging && e.touches.length===1)
-  move(e.touches[0].clientX,e.touches[0].clientY);
-});
-document.addEventListener("touchend",end);
-
-/* Mouse */
 document.addEventListener("mousedown",e=>start(e.clientX,e.clientY));
 document.addEventListener("mousemove",e=>dragging&&move(e.clientX,e.clientY));
 document.addEventListener("mouseup",end);
-document.addEventListener("wheel",e=>{
- scale+=e.deltaY*-0.001;
- scale=Math.max(.2,Math.min(2.5,scale));
- model.object3D.scale.set(scale,scale,scale);
+
+document.addEventListener("touchstart",e=>{
+ const now=Date.now();
+ if(now-lastTap<300){
+  yaw=pitch=0;
+  model.object3D.rotation.set(0,0,0);
+  scale=foods[index].scale;
+  model.object3D.scale.set(scale,scale,scale);
+  showToast("View reset");
+ }
+ lastTap=now;
+ if(e.touches.length===1)
+  start(e.touches[0].clientX,e.touches[0].clientY);
 });
 
-/* Auto rotate */
+document.addEventListener("touchmove",e=>{
+ if(dragging && e.touches.length===1)
+  move(e.touches[0].clientX,e.touches[0].clientY);
+});
+
+document.addEventListener("touchend",end);
+
 AFRAME.registerComponent("spin",{tick:()=>{
  if(autoRotate){
+  yaw+=vel;
+  vel*=0.95;
   yaw+=0.002;
   model.object3D.rotation.y=yaw;
  }
@@ -294,7 +298,3 @@ model.setAttribute("spin","");
 
 </body>
 </html>
-
-
-
-
