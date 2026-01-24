@@ -148,6 +148,19 @@ a-scene {
 <a-scene embedded vr-mode-ui="enabled:false"
          arjs="sourceType:webcam; debugUIEnabled:false;">
 
+  <a-assets>
+    <a-asset-item id="food0" src="models/burger/scene.gltf"></a-asset-item>
+    <a-asset-item id="food1" src="models/pizza/scene.gltf"></a-asset-item>
+    <a-asset-item id="food2" src="models/fries/scene.gltf"></a-asset-item>
+    <a-asset-item id="food3" src="models/assorted_salad/scene.gltf"></a-asset-item>
+    <a-asset-item id="food4" src="models/chole_bhature/scene.gltf"></a-asset-item>
+    <a-asset-item id="food5" src="models/grilled_sandwich/scene.gltf"></a-asset-item>
+    <a-asset-item id="food6" src="models/palak_paneer/scene.gltf"></a-asset-item>
+    <a-asset-item id="food7" src="models/potato_salad/scene.gltf"></a-asset-item>
+    <a-asset-item id="food8" src="models/samosa/scene.gltf"></a-asset-item>
+    <a-asset-item id="food9" src="models/soup_bowl/scene.gltf"></a-asset-item>
+  </a-assets>
+
   <a-entity light="type:ambient;intensity:0.8"></a-entity>
   <a-entity light="type:directional;intensity:0.4" position="1 2 1"></a-entity>
 
@@ -157,16 +170,16 @@ a-scene {
 
 <script>
 const foods=[
- {model:"models/burger/scene.gltf",name:"Burger",price:"₹149",scale:.4},
- {model:"models/pizza/scene.gltf",name:"Pizza",price:"₹299",scale:2},
- {model:"models/fries/scene.gltf",name:"Fries",price:"₹99",scale:.5},
- {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:"₹129",scale:6},
- {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:"89",scale:6},
- {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:"₹49",scale:6},
- {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:"₹79",scale:6},
- {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:"₹89",scale:.01},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:"₹39",scale:.5},
- {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:"₹69",scale:.2}
+ {asset:"#food0",model:"models/burger/scene.gltf",name:"Burger",price:"₹149",scale:.4},
+ {asset:"#food1",model:"models/pizza/scene.gltf",name:"Pizza",price:"₹299",scale:2},
+ {asset:"#food2",model:"models/fries/scene.gltf",name:"Fries",price:"₹99",scale:.5},
+ {asset:"#food3",model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:"₹129",scale:6},
+ {asset:"#food4",model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:"89",scale:6},
+ {asset:"#food5",model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:"₹49",scale:6},
+ {asset:"#food6",model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:"₹79",scale:6},
+ {asset:"#food7",model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:"₹89",scale:.01},
+ {asset:"#food8",model:"models/samosa/scene.gltf",name:"Samosa",price:"₹39",scale:.5},
+ {asset:"#food9",model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:"₹69",scale:.2}
 ];
 
 const holder=document.getElementById("holder");
@@ -198,7 +211,7 @@ function updateStars(){
 /* ---------- Load ---------- */
 function loadFood(i){
  loading.style.display="flex";
- model.setAttribute("gltf-model",foods[i].model);
+ model.setAttribute("gltf-model",foods[i].asset);
  scale=foods[i].scale;
  model.object3D.scale.set(scale,scale,scale);
  yaw=pitch=0;
@@ -294,3 +307,4 @@ model.setAttribute("spin","");
 
 </body>
 </html>
+
