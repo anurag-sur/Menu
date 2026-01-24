@@ -131,7 +131,7 @@ a-scene {
 
 <div id="info"></div>
 <div id="toast"></div>
-<div id="loading">Loading model…</div>
+<div id="loading">Loading models…</div>
 
 <button id="left" class="btn">◀</button>
 <button id="rate" class="btn">Rate</button>
@@ -179,8 +179,8 @@ let index=0, rating=0;
 let yaw=0,pitch=0,scale=foods[0].scale;
 let autoRotate=true;
 
-const model=document.createElement("a-entity");
-holder.appendChild(model);
+const models=[];
+let loadedCount=0;
 
 /* ---------- Helpers ---------- */
 function showToast(t){
@@ -195,27 +195,41 @@ function updateStars(){
  });
 }
 
-/* ---------- Load ---------- */
-function loadFood(i){
- loading.style.display="flex";
- model.setAttribute("gltf-model",foods[i].model);
+/* ---------- Preload all models ---------- */
+foods.forEach((food,i)=>{
+ const m=document.createElement("a-entity");
+ m.setAttribute("gltf-model",food.model);
+ m.object3D.scale.set(food.scale,food.scale,food.scale);
+ m.object3D.visible=false;
+ holder.appendChild(m);
+ models.push(m);
+ 
+ m.addEventListener("model-loaded",()=>{
+  loadedCount++;
+  loading.textContent=`Loading models… ${loadedCount}/${foods.length}`;
+  if(loadedCount===foods.length){
+   loading.style.display="none";
+   showFood(0);
+  }
+ });
+});
+
+/* ---------- Show ---------- */
+function showFood(i){
+ models.forEach((m,idx)=>{
+  m.object3D.visible=(idx===i);
+ });
  scale=foods[i].scale;
- model.object3D.scale.set(scale,scale,scale);
  yaw=pitch=0;
+ models[i].object3D.rotation.set(0,0,0);
  info.textContent=`${foods[i].name} • ${foods[i].price}`;
  rating=0;
  updateStars();
 }
 
-model.addEventListener("model-loaded",()=>{
- loading.style.display="none";
-});
-
-loadFood(0);
-
 /* ---------- UI ---------- */
-left.onclick=()=>{ index=(index+foods.length-1)%foods.length; loadFood(index); }
-right.onclick=()=>{ index=(index+1)%foods.length; loadFood(index); }
+left.onclick=()=>{ index=(index+foods.length-1)%foods.length; showFood(index); }
+right.onclick=()=>{ index=(index+1)%foods.length; showFood(index); }
 
 rate.onclick=()=>{
  ratingMenu.style.display =
@@ -247,7 +261,7 @@ function move(x,y){
  pitch+=(y-ly)*0.01;
  pitch=Math.max(-1.4,Math.min(1.4,pitch));
  lx=x; ly=y;
- model.object3D.rotation.set(pitch,yaw,0);
+ models[index].object3D.rotation.set(pitch,yaw,0);
 }
 function end(){
  dragging=false;
@@ -264,7 +278,7 @@ document.addEventListener("touchmove",e=>{
   const d=dist(e.touches[0],e.touches[1]);
   scale*=d/zoom;
   scale=Math.max(.2,Math.min(2.5,scale));
-  model.object3D.scale.set(scale,scale,scale);
+  models[index].object3D.scale.set(scale,scale,scale);
   zoom=d;
  }
  if(dragging && e.touches.length===1)
@@ -279,17 +293,17 @@ document.addEventListener("mouseup",end);
 document.addEventListener("wheel",e=>{
  scale+=e.deltaY*-0.001;
  scale=Math.max(.2,Math.min(2.5,scale));
- model.object3D.scale.set(scale,scale,scale);
+ models[index].object3D.scale.set(scale,scale,scale);
 });
 
 /* Auto rotate */
 AFRAME.registerComponent("spin",{tick:()=>{
  if(autoRotate){
   yaw+=0.002;
-  model.object3D.rotation.y=yaw;
+  models[index].object3D.rotation.y=yaw;
  }
 }});
-model.setAttribute("spin","");
+holder.setAttribute("spin","");
 </script>
 
 </body>
