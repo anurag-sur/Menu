@@ -49,6 +49,9 @@ body{
   font-weight:600;
   cursor:pointer;
   transition:background .15s, transform .1s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .btn:active{
   transform:scale(.96);
@@ -79,6 +82,10 @@ body{
   cursor:pointer;
   transition:background .15s, transform .1s;
   z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
 }
 #viewCart:active{
   transform:scale(.96);
@@ -230,6 +237,9 @@ body{
   font-weight:600;
   cursor:pointer;
   transition:transform .1s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .cart-actions button:active{
@@ -244,6 +254,11 @@ body{
 #checkout{
   background:#1f7aff;
   color:white;
+}
+
+#checkout:disabled{
+  background:rgba(60,60,65,.5);
+  cursor:not-allowed;
 }
 
 #emptyCart{
@@ -405,15 +420,19 @@ function updateCartBadge(){
 }
 
 function updateCartDisplay(){
+ const checkoutBtn=document.getElementById("checkout");
+ 
  if(cart.length===0){
   cartItems.innerHTML="";
   emptyCart.style.display="block";
   cartTotal.style.display="none";
+  checkoutBtn.disabled=true;
   return;
  }
  
  emptyCart.style.display="none";
  cartTotal.style.display="flex";
+ checkoutBtn.disabled=false;
  
  cartItems.innerHTML=cart.map((item,idx)=>`
   <div class="cart-item">
@@ -467,11 +486,13 @@ function showFood(i){
   m.object3D.visible=(idx===i);
  });
  scale=foods[i].scale;
+ models[i].object3D.scale.set(scale,scale,scale);
  yaw=pitch=0;
  models[i].object3D.rotation.set(0,0,0);
  info.textContent=`${foods[i].name} • ₹${foods[i].price}`;
  rating=0;
  updateStars();
+ autoRotate=true;
 }
 
 /* ---------- UI ---------- */
@@ -507,8 +528,13 @@ checkout.onclick=()=>{
   return;
  }
  const total=cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
- showToast(`Checkout: ₹${total} - Coming soon!`);
- cartModal.style.display="none";
+ showToast(`Order placed: ₹${total}`);
+ cart=[];
+ updateCartBadge();
+ updateCartDisplay();
+ setTimeout(()=>{
+  cartModal.style.display="none";
+ },800);
 };
 
 cartModal.onclick=(e)=>{
