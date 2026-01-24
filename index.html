@@ -57,9 +57,46 @@ body{
 
 #left{ left:16px; }
 #right{ right:16px; }
-#rate{
+
+#addCart{
   left:50%;
   transform:translateX(-50%);
+  background:rgba(31,122,255,.9);
+  border-color:rgba(31,122,255,.3);
+}
+
+#viewCart{
+  position:absolute;
+  top:20px;
+  right:20px;
+  padding:10px 16px;
+  background:rgba(30,30,32,.9);
+  border:1px solid rgba(255,255,255,.12);
+  color:white;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background .15s, transform .1s;
+  z-index:5;
+}
+#viewCart:active{
+  transform:scale(.96);
+  background:rgba(50,50,55,.95);
+}
+
+#cartBadge{
+  position:absolute;
+  top:-6px;
+  right:-6px;
+  background:#ff3b30;
+  color:white;
+  border-radius:10px;
+  padding:2px 6px;
+  font-size:11px;
+  font-weight:600;
+  min-width:18px;
+  text-align:center;
 }
 
 /* ---------- Rating ---------- */
@@ -83,6 +120,137 @@ body{
 }
 .star.active{ color:#FFD54F; }
 .star:active{ transform:scale(1.2); }
+
+/* ---------- Cart Modal ---------- */
+#cartModal{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+#cartContent{
+  background:rgba(20,20,22,.98);
+  border-radius:20px;
+  padding:24px;
+  width:90%;
+  max-width:400px;
+  max-height:80vh;
+  overflow-y:auto;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+#cartContent h2{
+  margin:0 0 16px 0;
+  font-size:22px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  background:rgba(40,40,45,.6);
+  border-radius:12px;
+  margin-bottom:10px;
+}
+
+.cart-item-info{
+  flex:1;
+}
+
+.cart-item-name{
+  font-weight:600;
+  font-size:15px;
+  margin-bottom:4px;
+}
+
+.cart-item-price{
+  color:rgba(255,255,255,.6);
+  font-size:13px;
+}
+
+.cart-item-controls{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.qty-btn{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  background:rgba(60,60,65,.8);
+  border:1px solid rgba(255,255,255,.1);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background .15s;
+}
+
+.qty-btn:active{
+  background:rgba(80,80,85,.9);
+}
+
+.qty{
+  font-weight:600;
+  min-width:24px;
+  text-align:center;
+}
+
+#cartTotal{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:18px;
+  font-weight:600;
+}
+
+.cart-actions{
+  display:flex;
+  gap:10px;
+  margin-top:16px;
+}
+
+.cart-actions button{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .1s;
+}
+
+.cart-actions button:active{
+  transform:scale(.96);
+}
+
+#closeCart{
+  background:rgba(60,60,65,.8);
+  color:white;
+}
+
+#checkout{
+  background:#1f7aff;
+  color:white;
+}
+
+#emptyCart{
+  text-align:center;
+  padding:40px 20px;
+  color:rgba(255,255,255,.5);
+}
 
 /* ---------- Toast ---------- */
 #toast{
@@ -120,7 +288,9 @@ a-scene {
 #toast,
 .btn,
 #ratingMenu,
-.star {
+.star,
+#viewCart,
+#cartModal {
   pointer-events: auto;
 }
   
@@ -133,8 +303,13 @@ a-scene {
 <div id="toast"></div>
 <div id="loading">Loading models…</div>
 
+<button id="viewCart">
+  🛒 Cart
+  <span id="cartBadge" style="display:none;">0</span>
+</button>
+
 <button id="left" class="btn">◀</button>
-<button id="rate" class="btn">Rate</button>
+<button id="addCart" class="btn">Add to Cart</button>
 <button id="right" class="btn">▶</button>
 
 <div id="ratingMenu">
@@ -143,6 +318,23 @@ a-scene {
   <span class="star" data-s="3">★</span>
   <span class="star" data-s="4">★</span>
   <span class="star" data-s="5">★</span>
+</div>
+
+<!-- Cart Modal -->
+<div id="cartModal">
+  <div id="cartContent">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <div id="emptyCart" style="display:none;">Your cart is empty</div>
+    <div id="cartTotal" style="display:none;">
+      <span>Total:</span>
+      <span id="totalPrice">₹0</span>
+    </div>
+    <div class="cart-actions">
+      <button id="closeCart">Close</button>
+      <button id="checkout">Checkout</button>
+    </div>
+  </div>
 </div>
 
 <a-scene embedded vr-mode-ui="enabled:false"
@@ -157,16 +349,16 @@ a-scene {
 
 <script>
 const foods=[
- {model:"models/burger/scene.gltf",name:"Burger",price:"₹149",scale:.4},
- {model:"models/pizza/scene.gltf",name:"Pizza",price:"₹299",scale:2},
- {model:"models/fries/scene.gltf",name:"Fries",price:"₹99",scale:.5},
- {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:"₹129",scale:6},
- {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:"89",scale:6},
- {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:"₹49",scale:6},
- {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:"₹79",scale:6},
- {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:"₹89",scale:.01},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:"₹39",scale:.5},
- {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:"₹69",scale:.2}
+ {model:"models/burger/scene.gltf",name:"Burger",price:149,scale:.4},
+ {model:"models/pizza/scene.gltf",name:"Pizza",price:299,scale:2},
+ {model:"models/fries/scene.gltf",name:"Fries",price:99,scale:.5},
+ {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:129,scale:6},
+ {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:89,scale:6},
+ {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:49,scale:6},
+ {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:79,scale:6},
+ {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:89,scale:.01},
+ {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5},
+ {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:69,scale:.2}
 ];
 
 const holder=document.getElementById("holder");
@@ -174,10 +366,17 @@ const info=document.getElementById("info");
 const loading=document.getElementById("loading");
 const toast=document.getElementById("toast");
 const ratingMenu=document.getElementById("ratingMenu");
+const cartModal=document.getElementById("cartModal");
+const cartItems=document.getElementById("cartItems");
+const cartBadge=document.getElementById("cartBadge");
+const totalPrice=document.getElementById("totalPrice");
+const emptyCart=document.getElementById("emptyCart");
+const cartTotal=document.getElementById("cartTotal");
 
 let index=0, rating=0;
 let yaw=0,pitch=0,scale=foods[0].scale;
 let autoRotate=true;
+let cart=[];
 
 const models=[];
 let loadedCount=0;
@@ -193,6 +392,54 @@ function updateStars(){
  document.querySelectorAll(".star").forEach(s=>{
   s.classList.toggle("active",s.dataset.s<=rating);
  });
+}
+
+function updateCartBadge(){
+ const totalItems=cart.reduce((sum,item)=>sum+item.qty,0);
+ if(totalItems>0){
+  cartBadge.textContent=totalItems;
+  cartBadge.style.display="block";
+ }else{
+  cartBadge.style.display="none";
+ }
+}
+
+function updateCartDisplay(){
+ if(cart.length===0){
+  cartItems.innerHTML="";
+  emptyCart.style.display="block";
+  cartTotal.style.display="none";
+  return;
+ }
+ 
+ emptyCart.style.display="none";
+ cartTotal.style.display="flex";
+ 
+ cartItems.innerHTML=cart.map((item,idx)=>`
+  <div class="cart-item">
+   <div class="cart-item-info">
+    <div class="cart-item-name">${item.name}</div>
+    <div class="cart-item-price">₹${item.price} each</div>
+   </div>
+   <div class="cart-item-controls">
+    <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+    <span class="qty">${item.qty}</span>
+    <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+   </div>
+  </div>
+ `).join("");
+ 
+ const total=cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
+ totalPrice.textContent=`₹${total}`;
+}
+
+function changeQty(idx,delta){
+ cart[idx].qty+=delta;
+ if(cart[idx].qty<=0){
+  cart.splice(idx,1);
+ }
+ updateCartBadge();
+ updateCartDisplay();
 }
 
 /* ---------- Preload all models ---------- */
@@ -222,7 +469,7 @@ function showFood(i){
  scale=foods[i].scale;
  yaw=pitch=0;
  models[i].object3D.rotation.set(0,0,0);
- info.textContent=`${foods[i].name} • ${foods[i].price}`;
+ info.textContent=`${foods[i].name} • ₹${foods[i].price}`;
  rating=0;
  updateStars();
 }
@@ -231,9 +478,43 @@ function showFood(i){
 left.onclick=()=>{ index=(index+foods.length-1)%foods.length; showFood(index); }
 right.onclick=()=>{ index=(index+1)%foods.length; showFood(index); }
 
-rate.onclick=()=>{
- ratingMenu.style.display =
- ratingMenu.style.display==="block"?"none":"block";
+addCart.onclick=()=>{
+ const food=foods[index];
+ const existing=cart.find(item=>item.name===food.name);
+ 
+ if(existing){
+  existing.qty++;
+ }else{
+  cart.push({name:food.name,price:food.price,qty:1});
+ }
+ 
+ updateCartBadge();
+ showToast(`${food.name} added to cart!`);
+};
+
+viewCart.onclick=()=>{
+ updateCartDisplay();
+ cartModal.style.display="flex";
+};
+
+closeCart.onclick=()=>{
+ cartModal.style.display="none";
+};
+
+checkout.onclick=()=>{
+ if(cart.length===0){
+  showToast("Cart is empty!");
+  return;
+ }
+ const total=cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
+ showToast(`Checkout: ₹${total} - Coming soon!`);
+ cartModal.style.display="none";
+};
+
+cartModal.onclick=(e)=>{
+ if(e.target===cartModal){
+  cartModal.style.display="none";
+ }
 };
 
 document.querySelectorAll(".star").forEach(s=>{
