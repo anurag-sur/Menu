@@ -224,8 +224,12 @@ model.addEventListener("model-loaded",()=>{
  loading.style.display="none";
 });
 
-loadFood(0);
+const scene = document.querySelector("a-scene");
 
+scene.addEventListener("loaded", () => {
+  loadFood(0)
+});
+  
 /* ---------- UI ---------- */
 left.onclick=()=>{ index=(index+foods.length-1)%foods.length; loadFood(index); }
 right.onclick=()=>{ index=(index+1)%foods.length; loadFood(index); }
@@ -307,4 +311,5 @@ model.setAttribute("spin","");
 
 </body>
 </html>
+
 
