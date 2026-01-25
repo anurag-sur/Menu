@@ -22,23 +22,14 @@ body{
   color:white;
 }
 
-/* Camera overlay for better model visibility */
-#cameraOverlay{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  pointer-events:none;
-  z-index:1;
-}
-
 /* ---------- Top Bar ---------- */
 #topBar{
   position:absolute;
   top:0;
   left:0;
   right:0;
-  padding:16px 20px;
-  background:linear-gradient(180deg, rgba(0,0,0,.6) 0%, transparent 100%);
+  padding:8px 12px;
+  background:linear-gradient(180deg, rgba(0,0,0,.4) 0%, transparent 100%);
   z-index:5;
   display:flex;
   justify-content:space-between;
@@ -46,29 +37,29 @@ body{
 }
 
 #logo{
-  font-size:18px;
+  font-size:15px;
   font-weight:700;
   letter-spacing:-0.5px;
 }
 
 #topActions{
   display:flex;
-  gap:10px;
+  gap:6px;
 }
 
 .top-btn{
-  padding:8px 14px;
-  background:rgba(30,30,32,.85);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:10px;
+  padding:6px 10px;
+  background:rgba(30,30,32,.75);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;
   color:white;
-  font-size:13px;
+  font-size:12px;
   font-weight:600;
   cursor:pointer;
   transition:all .15s;
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:4px;
 }
 
 .top-btn:active{
@@ -97,76 +88,76 @@ body{
 /* ---------- Info Card ---------- */
 #infoCard{
   position:absolute;
-  top:80px;
+  top:50px;
   left:50%;
   transform:translateX(-50%);
   width:90%;
-  max-width:360px;
-  padding:16px 20px;
-  background:rgba(20,20,22,.92);
-  backdrop-filter:blur(20px);
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.08);
+  max-width:320px;
+  padding:10px 14px;
+  background:rgba(20,20,22,.88);
+  backdrop-filter:blur(16px);
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.06);
   z-index:5;
-  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
 }
 
 #foodName{
-  font-size:22px;
+  font-size:18px;
   font-weight:700;
-  margin-bottom:6px;
+  margin-bottom:4px;
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:6px;
 }
 
 #foodPrice{
-  font-size:20px;
+  font-size:16px;
   font-weight:700;
   color:#4CAF50;
-  margin-bottom:8px;
+  margin-bottom:6px;
 }
 
 #foodStats{
   display:flex;
-  gap:12px;
-  font-size:12px;
+  gap:10px;
+  font-size:11px;
   color:rgba(255,255,255,.5);
-  margin-top:8px;
-  padding-top:12px;
-  border-top:1px solid rgba(255,255,255,.08);
+  margin-top:6px;
+  padding-top:8px;
+  border-top:1px solid rgba(255,255,255,.06);
 }
 
 .stat{
   display:flex;
   align-items:center;
-  gap:4px;
+  gap:3px;
 }
 
 /* ---------- Quick Actions ---------- */
 #quickActions{
   position:absolute;
-  bottom:180px;
+  bottom:130px;
   left:50%;
   transform:translateX(-50%);
   display:flex;
-  gap:10px;
+  gap:6px;
   z-index:5;
 }
 
 .quick-btn{
-  padding:10px 16px;
-  background:rgba(30,30,32,.88);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:12px;
+  padding:6px 10px;
+  background:rgba(30,30,32,.8);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;
   color:white;
-  font-size:13px;
+  font-size:11px;
   font-weight:600;
   cursor:pointer;
   transition:all .15s;
   display:flex;
   align-items:center;
-  gap:6px;
+  gap:4px;
   backdrop-filter:blur(10px);
 }
 
@@ -187,26 +178,26 @@ body{
   bottom:0;
   left:0;
   right:0;
-  padding:20px;
-  background:linear-gradient(0deg, rgba(0,0,0,.7) 0%, transparent 100%);
+  padding:12px;
+  background:linear-gradient(0deg, rgba(0,0,0,.5) 0%, transparent 100%);
   z-index:5;
 }
 
 #navButtons{
   display:flex;
-  gap:12px;
-  margin-bottom:16px;
+  gap:8px;
+  margin-bottom:10px;
   justify-content:center;
 }
 
 .nav-btn{
-  flex:0 0 56px;
-  height:56px;
-  background:rgba(30,30,32,.9);
-  border:1px solid rgba(255,255,255,.12);
+  flex:0 0 44px;
+  height:44px;
+  background:rgba(30,30,32,.85);
+  border:1px solid rgba(255,255,255,.1);
   color:white;
-  border-radius:16px;
-  font-size:20px;
+  border-radius:12px;
+  font-size:18px;
   cursor:pointer;
   transition:all .15s;
   display:flex;
@@ -225,32 +216,32 @@ body{
   background:linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
   border-color:rgba(31,122,255,.3);
   font-weight:700;
-  font-size:16px;
-  box-shadow:0 4px 20px rgba(31,122,255,.4);
+  font-size:14px;
+  box-shadow:0 2px 12px rgba(31,122,255,.3);
 }
 
 /* ---------- Action Bar ---------- */
 #actionBar{
   display:flex;
-  gap:10px;
+  gap:8px;
   justify-content:center;
 }
 
 .action-btn{
   flex:1;
-  padding:12px;
-  background:rgba(40,40,45,.85);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:14px;
+  padding:8px;
+  background:rgba(40,40,45,.8);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
   color:white;
-  font-size:14px;
+  font-size:12px;
   font-weight:600;
   cursor:pointer;
   transition:all .15s;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:6px;
+  gap:4px;
   backdrop-filter:blur(10px);
 }
 
@@ -268,19 +259,19 @@ body{
 /* ---------- Rating ---------- */
 #ratingMenu{
   position:absolute;
-  bottom:200px;
+  bottom:150px;
   left:50%;
   transform:translateX(-50%);
-  padding:12px 18px;
-  background:rgba(20,20,22,.95);
-  backdrop-filter:blur(20px);
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.1);
+  padding:8px 12px;
+  background:rgba(20,20,22,.92);
+  backdrop-filter:blur(16px);
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
   display:none;
   z-index:5;
   align-items:center;
-  gap:6px;
-  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  gap:4px;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
 }
 
 #ratingMenu.show{
@@ -288,7 +279,7 @@ body{
 }
 
 .star{
-  font-size:32px;
+  font-size:26px;
   cursor:pointer;
   color:rgba(255,255,255,.2);
   transition:all .2s;
@@ -296,9 +287,9 @@ body{
 }
 .star.active{ 
   color:#FFD54F;
-  text-shadow:0 0 12px rgba(255,213,79,.5);
+  text-shadow:0 0 10px rgba(255,213,79,.4);
 }
-.star:active{ transform:scale(1.3); }
+.star:active{ transform:scale(1.2); }
 
 /* ---------- Filter Menu ---------- */
 #filterMenu{
@@ -617,8 +608,6 @@ a-scene {
 
 <body>
 
-<div id="cameraOverlay"></div>
-
 <!-- Top Bar -->
 <div id="topBar">
   <div id="logo">🍔 FoodAR</div>
@@ -741,7 +730,8 @@ const foods=[
  {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:49,scale:6,category:"western",views:678,rating:4.1,orders:198},
  {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:79,scale:6,category:"indian",views:1123,rating:4.6,orders:312},
  {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:89,scale:.01,category:"healthy",views:345,rating:4.0,orders:76},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5,category:"indian",views:2345,rating:4.9,orders:678}
+ {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5,category:"indian",views:2345,rating:4.9,orders:678},
+ {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:69,scale:.2,category:"healthy",views:567,rating:4.4,orders:134}
 ];
 
 const holder=document.getElementById("holder");
@@ -1161,4 +1151,3 @@ holder.setAttribute("spin","");
 
 </body>
 </html>
-
