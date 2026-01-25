@@ -9,7 +9,7 @@
 <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.2/aframe/build/aframe-ar.js"></script>
 
 <!-- Font -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
 *{ box-sizing:border-box; }
@@ -22,74 +22,62 @@ body{
   color:white;
 }
 
-/* ---------- Top Info ---------- */
-#info{
+/* Camera overlay for better model visibility */
+#cameraOverlay{
   position:absolute;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  padding:10px 18px;
-  background:rgba(20,20,22,.85);
-  border-radius:14px;
-  font-size:16px;
-  font-weight:600;
-  z-index:5;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  pointer-events:none;
+  z-index:1;
 }
 
-/* ---------- Buttons ---------- */
-.btn{
+/* ---------- Top Bar ---------- */
+#topBar{
   position:absolute;
-  bottom:20px;
-  padding:12px 18px;
-  background:rgba(30,30,32,.9);
-  border:1px solid rgba(255,255,255,.12);
+  top:0;
+  left:0;
+  right:0;
+  padding:16px 20px;
+  background:linear-gradient(180deg, rgba(0,0,0,.6) 0%, transparent 100%);
+  z-index:5;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+#logo{
+  font-size:18px;
+  font-weight:700;
+  letter-spacing:-0.5px;
+}
+
+#topActions{
+  display:flex;
+  gap:10px;
+}
+
+.top-btn{
+  padding:8px 14px;
+  background:rgba(30,30,32,.85);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
   color:white;
-  border-radius:14px;
-  font-size:16px;
+  font-size:13px;
   font-weight:600;
   cursor:pointer;
-  transition:background .15s, transform .1s;
+  transition:all .15s;
   display:flex;
   align-items:center;
-  justify-content:center;
-}
-.btn:active{
-  transform:scale(.96);
-  background:rgba(50,50,55,.95);
+  gap:6px;
 }
 
-#left{ left:16px; }
-#right{ right:16px; }
-
-#addCart{
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(31,122,255,.9);
-  border-color:rgba(31,122,255,.3);
+.top-btn:active{
+  transform:scale(.95);
+  background:rgba(50,50,55,.9);
 }
 
 #viewCart{
-  position:absolute;
-  top:20px;
-  right:20px;
-  padding:10px 16px;
-  background:rgba(30,30,32,.9);
-  border:1px solid rgba(255,255,255,.12);
-  color:white;
-  border-radius:14px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  transition:background .15s, transform .1s;
-  z-index:5;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-}
-#viewCart:active{
-  transform:scale(.96);
-  background:rgba(50,50,55,.95);
+  position:relative;
 }
 
 #cartBadge{
@@ -101,38 +89,287 @@ body{
   border-radius:10px;
   padding:2px 6px;
   font-size:11px;
-  font-weight:600;
+  font-weight:700;
   min-width:18px;
   text-align:center;
+}
+
+/* ---------- Info Card ---------- */
+#infoCard{
+  position:absolute;
+  top:80px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  max-width:360px;
+  padding:16px 20px;
+  background:rgba(20,20,22,.92);
+  backdrop-filter:blur(20px);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  z-index:5;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+}
+
+#foodName{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+#foodPrice{
+  font-size:20px;
+  font-weight:700;
+  color:#4CAF50;
+  margin-bottom:8px;
+}
+
+#foodStats{
+  display:flex;
+  gap:12px;
+  font-size:12px;
+  color:rgba(255,255,255,.5);
+  margin-top:8px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.stat{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+/* ---------- Quick Actions ---------- */
+#quickActions{
+  position:absolute;
+  bottom:180px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+  z-index:5;
+}
+
+.quick-btn{
+  padding:10px 16px;
+  background:rgba(30,30,32,.88);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;
+  color:white;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  backdrop-filter:blur(10px);
+}
+
+.quick-btn:active{
+  transform:scale(.95);
+  background:rgba(50,50,55,.9);
+}
+
+.quick-btn.active{
+  background:rgba(31,122,255,.85);
+  border-color:rgba(31,122,255,.3);
+  box-shadow:0 4px 16px rgba(31,122,255,.3);
+}
+
+/* ---------- Main Controls ---------- */
+#controls{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding:20px;
+  background:linear-gradient(0deg, rgba(0,0,0,.7) 0%, transparent 100%);
+  z-index:5;
+}
+
+#navButtons{
+  display:flex;
+  gap:12px;
+  margin-bottom:16px;
+  justify-content:center;
+}
+
+.nav-btn{
+  flex:0 0 56px;
+  height:56px;
+  background:rgba(30,30,32,.9);
+  border:1px solid rgba(255,255,255,.12);
+  color:white;
+  border-radius:16px;
+  font-size:20px;
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(10px);
+}
+
+.nav-btn:active{
+  transform:scale(.94);
+  background:rgba(50,50,55,.95);
+}
+
+#addCart{
+  flex:1;
+  background:linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
+  border-color:rgba(31,122,255,.3);
+  font-weight:700;
+  font-size:16px;
+  box-shadow:0 4px 20px rgba(31,122,255,.4);
+}
+
+/* ---------- Action Bar ---------- */
+#actionBar{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+}
+
+.action-btn{
+  flex:1;
+  padding:12px;
+  background:rgba(40,40,45,.85);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  color:white;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  backdrop-filter:blur(10px);
+}
+
+.action-btn:active{
+  transform:scale(.96);
+  background:rgba(60,60,65,.9);
+}
+
+.action-btn.favorited{
+  background:rgba(255,59,48,.2);
+  border-color:rgba(255,59,48,.3);
+  color:#ff3b30;
 }
 
 /* ---------- Rating ---------- */
 #ratingMenu{
   position:absolute;
-  bottom:78px;
+  bottom:200px;
   left:50%;
   transform:translateX(-50%);
-  padding:10px 16px;
-  background:rgba(20,20,22,.92);
+  padding:12px 18px;
+  background:rgba(20,20,22,.95);
+  backdrop-filter:blur(20px);
   border-radius:16px;
+  border:1px solid rgba(255,255,255,.1);
   display:none;
   z-index:5;
+  align-items:center;
+  gap:6px;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+
+#ratingMenu.show{
+  display:flex;
 }
 
 .star{
-  font-size:28px;
+  font-size:32px;
   cursor:pointer;
-  color:rgba(255,255,255,.25);
-  transition:color .15s, transform .1s;
+  color:rgba(255,255,255,.2);
+  transition:all .2s;
+  line-height:1;
 }
-.star.active{ color:#FFD54F; }
-.star:active{ transform:scale(1.2); }
+.star.active{ 
+  color:#FFD54F;
+  text-shadow:0 0 12px rgba(255,213,79,.5);
+}
+.star:active{ transform:scale(1.3); }
+
+/* ---------- Filter Menu ---------- */
+#filterMenu{
+  position:absolute;
+  top:80px;
+  left:20px;
+  right:20px;
+  background:rgba(20,20,22,.95);
+  backdrop-filter:blur(20px);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.1);
+  padding:20px;
+  display:none;
+  z-index:100;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+
+#filterMenu.show{
+  display:block;
+}
+
+.filter-section{
+  margin-bottom:20px;
+}
+
+.filter-section:last-child{
+  margin-bottom:0;
+}
+
+.filter-title{
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:10px;
+  color:rgba(255,255,255,.7);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.filter-options{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.filter-chip{
+  padding:8px 14px;
+  background:rgba(40,40,45,.6);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;
+  color:white;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+}
+
+.filter-chip:active{
+  transform:scale(.95);
+}
+
+.filter-chip.active{
+  background:rgba(31,122,255,.8);
+  border-color:rgba(31,122,255,.3);
+}
 
 /* ---------- Cart Modal ---------- */
 #cartModal{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.8);
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);
   display:none;
   align-items:center;
   justify-content:center;
@@ -141,28 +378,38 @@ body{
 
 #cartContent{
   background:rgba(20,20,22,.98);
-  border-radius:20px;
-  padding:24px;
+  border-radius:24px;
+  padding:28px 24px;
   width:90%;
-  max-width:400px;
+  max-width:420px;
   max-height:80vh;
   overflow-y:auto;
   border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
 }
 
-#cartContent h2{
-  margin:0 0 16px 0;
-  font-size:22px;
+#cartHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+#cartHeader h2{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
 }
 
 .cart-item{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:12px;
+  padding:14px;
   background:rgba(40,40,45,.6);
-  border-radius:12px;
-  margin-bottom:10px;
+  border-radius:14px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,255,255,.05);
 }
 
 .cart-item-info{
@@ -176,7 +423,7 @@ body{
 }
 
 .cart-item-price{
-  color:rgba(255,255,255,.6);
+  color:rgba(255,255,255,.5);
   font-size:13px;
 }
 
@@ -187,59 +434,67 @@ body{
 }
 
 .qty-btn{
-  width:28px;
-  height:28px;
-  border-radius:8px;
+  width:32px;
+  height:32px;
+  border-radius:10px;
   background:rgba(60,60,65,.8);
   border:1px solid rgba(255,255,255,.1);
   color:white;
-  font-size:16px;
+  font-size:18px;
   cursor:pointer;
   display:flex;
   align-items:center;
   justify-content:center;
-  transition:background .15s;
+  transition:all .15s;
+  font-weight:600;
 }
 
 .qty-btn:active{
   background:rgba(80,80,85,.9);
+  transform:scale(.9);
 }
 
 .qty{
-  font-weight:600;
-  min-width:24px;
+  font-weight:700;
+  min-width:28px;
   text-align:center;
+  font-size:16px;
 }
 
 #cartTotal{
   margin-top:20px;
-  padding-top:16px;
+  padding-top:20px;
   border-top:1px solid rgba(255,255,255,.1);
   display:flex;
   justify-content:space-between;
   align-items:center;
-  font-size:18px;
-  font-weight:600;
+  font-size:20px;
+  font-weight:700;
+}
+
+#totalPrice{
+  color:#4CAF50;
 }
 
 .cart-actions{
   display:flex;
-  gap:10px;
-  margin-top:16px;
+  gap:12px;
+  margin-top:20px;
 }
 
 .cart-actions button{
   flex:1;
-  padding:12px;
-  border-radius:12px;
+  padding:14px;
+  border-radius:14px;
   border:none;
-  font-size:15px;
-  font-weight:600;
+  font-size:16px;
+  font-weight:700;
   cursor:pointer;
-  transition:transform .1s;
+  transition:all .15s;
   display:flex;
   align-items:center;
   justify-content:center;
+  gap:6px;
 }
 
 .cart-actions button:active{
@@ -249,37 +504,44 @@ body{
 #closeCart{
   background:rgba(60,60,65,.8);
   color:white;
+  border:1px solid rgba(255,255,255,.1);
 }
 
 #checkout{
-  background:#1f7aff;
+  background:linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
   color:white;
+  box-shadow:0 4px 20px rgba(76,175,80,.4);
 }
 
 #checkout:disabled{
   background:rgba(60,60,65,.5);
   cursor:not-allowed;
+  box-shadow:none;
 }
 
 #emptyCart{
   text-align:center;
   padding:40px 20px;
-  color:rgba(255,255,255,.5);
+  color:rgba(255,255,255,.4);
+  font-size:15px;
 }
 
 /* ---------- Toast ---------- */
 #toast{
   position:absolute;
-  top:72px;
+  top:90px;
   left:50%;
   transform:translateX(-50%);
-  background:#1f7aff;
-  padding:8px 14px;
+  background:rgba(31,122,255,.95);
+  backdrop-filter:blur(20px);
+  padding:12px 18px;
   border-radius:12px;
   font-size:14px;
+  font-weight:600;
   opacity:0;
   transition:opacity .3s;
-  z-index:6;
+  z-index:101;
+  box-shadow:0 4px 20px rgba(31,122,255,.4);
 }
 
 /* ---------- Loading ---------- */
@@ -287,26 +549,67 @@ body{
   position:absolute;
   inset:0;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
   background:#0b0b0c;
-  z-index:10;
+  z-index:102;
+  gap:16px;
+}
+
+#loadingText{
   font-size:18px;
   font-weight:600;
+}
+
+#loadingBar{
+  width:200px;
+  height:4px;
+  background:rgba(255,255,255,.1);
+  border-radius:2px;
+  overflow:hidden;
+}
+
+#loadingProgress{
+  height:100%;
+  background:linear-gradient(90deg, #1f7aff, #0066ff);
+  width:0%;
+  transition:width .3s;
 }
 
 a-scene {
   pointer-events: none;
 }
 
-#info,
+#topBar,
+#infoCard,
 #toast,
-.btn,
+#controls,
+#quickActions,
+#actionBar,
+.nav-btn,
+.action-btn,
+.quick-btn,
+.top-btn,
 #ratingMenu,
 .star,
-#viewCart,
-#cartModal {
+#cartModal,
+#filterMenu {
   pointer-events: auto;
+}
+
+/* Scrollbar for cart */
+#cartContent::-webkit-scrollbar{
+  width:6px;
+}
+
+#cartContent::-webkit-scrollbar-track{
+  background:transparent;
+}
+
+#cartContent::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.2);
+  border-radius:3px;
 }
   
 </style>
@@ -314,18 +617,81 @@ a-scene {
 
 <body>
 
-<div id="info"></div>
+<div id="cameraOverlay"></div>
+
+<!-- Top Bar -->
+<div id="topBar">
+  <div id="logo">🍔 FoodAR</div>
+  <div id="topActions">
+    <button class="top-btn" id="filterBtn">🔍 Filter</button>
+    <button class="top-btn" id="viewCart">
+      🛒 Cart
+      <span id="cartBadge" style="display:none;">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- Info Card -->
+<div id="infoCard">
+  <div id="foodName"></div>
+  <div id="foodPrice"></div>
+  <div id="foodStats">
+    <span class="stat">👁️ <span id="viewCount">0</span> views</span>
+    <span class="stat">⭐ <span id="avgRating">0.0</span></span>
+    <span class="stat">🛒 <span id="orderCount">0</span> orders</span>
+  </div>
+</div>
+
+<!-- Filter Menu -->
+<div id="filterMenu">
+  <div class="filter-section">
+    <div class="filter-title">Price Range</div>
+    <div class="filter-options">
+      <button class="filter-chip active" data-filter="all">All</button>
+      <button class="filter-chip" data-filter="budget">Under ₹50</button>
+      <button class="filter-chip" data-filter="mid">₹50-₹150</button>
+      <button class="filter-chip" data-filter="premium">₹150+</button>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-title">Category</div>
+    <div class="filter-options">
+      <button class="filter-chip active" data-category="all">All</button>
+      <button class="filter-chip" data-category="indian">Indian</button>
+      <button class="filter-chip" data-category="western">Western</button>
+      <button class="filter-chip" data-category="healthy">Healthy</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
-<div id="loading">Loading models…</div>
+<div id="loading">
+  <div id="loadingText">Loading models…</div>
+  <div id="loadingBar">
+    <div id="loadingProgress"></div>
+  </div>
+</div>
 
-<button id="viewCart">
-  🛒 Cart
-  <span id="cartBadge" style="display:none;">0</span>
-</button>
+<!-- Quick Actions -->
+<div id="quickActions">
+  <button class="quick-btn" id="resetBtn">🔄 Reset</button>
+  <button class="quick-btn active" id="toggleRotate">↻ Auto</button>
+  <button class="quick-btn" id="shareBtn">📤 Share</button>
+</div>
 
-<button id="left" class="btn">◀</button>
-<button id="addCart" class="btn">Add to Cart</button>
-<button id="right" class="btn">▶</button>
+<!-- Main Controls -->
+<div id="controls">
+  <div id="navButtons">
+    <button class="nav-btn" id="left">◀</button>
+    <button class="nav-btn" id="addCart">Add to Cart</button>
+    <button class="nav-btn" id="right">▶</button>
+  </div>
+  <div id="actionBar">
+    <button class="action-btn" id="favoriteBtn">❤️ Favorite</button>
+    <button class="action-btn" id="rateBtn">⭐ Rate</button>
+    <button class="action-btn" id="compareBtn">⚖️ Compare</button>
+  </div>
+</div>
 
 <div id="ratingMenu">
   <span class="star" data-s="1">★</span>
@@ -338,9 +704,12 @@ a-scene {
 <!-- Cart Modal -->
 <div id="cartModal">
   <div id="cartContent">
-    <h2>Your Cart</h2>
+    <div id="cartHeader">
+      <h2>Your Cart</h2>
+      <span id="itemCount" style="color:rgba(255,255,255,.5);font-size:14px;"></span>
+    </div>
     <div id="cartItems"></div>
-    <div id="emptyCart" style="display:none;">Your cart is empty</div>
+    <div id="emptyCart" style="display:none;">Your cart is empty 🛒</div>
     <div id="cartTotal" style="display:none;">
       <span>Total:</span>
       <span id="totalPrice">₹0</span>
@@ -364,20 +733,28 @@ a-scene {
 
 <script>
 const foods=[
- {model:"models/burger/scene.gltf",name:"Burger",price:149,scale:.4},
- {model:"models/pizza/scene.gltf",name:"Pizza",price:299,scale:2},
- {model:"models/fries/scene.gltf",name:"Fries",price:99,scale:.5},
- {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:129,scale:6},
- {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:89,scale:6},
- {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:49,scale:6},
- {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:79,scale:6},
- {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:89,scale:.01},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5}
+ {model:"models/burger/scene.gltf",name:"Burger",price:149,scale:.4,category:"western",views:1250,rating:4.5,orders:342},
+ {model:"models/pizza/scene.gltf",name:"Pizza",price:299,scale:2,category:"western",views:2100,rating:4.8,orders:521},
+ {model:"models/fries/scene.gltf",name:"Fries",price:99,scale:.5,category:"western",views:890,rating:4.2,orders:267},
+ {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:129,scale:6,category:"healthy",views:456,rating:4.3,orders:89},
+ {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:89,scale:6,category:"indian",views:1567,rating:4.7,orders:423},
+ {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:49,scale:6,category:"western",views:678,rating:4.1,orders:198},
+ {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:79,scale:6,category:"indian",views:1123,rating:4.6,orders:312},
+ {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:89,scale:.01,category:"healthy",views:345,rating:4.0,orders:76},
+ {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5,category:"indian",views:2345,rating:4.9,orders:678},
+ {model:"models/soup_bowl/scene.gltf",name:"Soup Bowl",price:69,scale:.2,category:"healthy",views:567,rating:4.4,orders:134}
 ];
 
 const holder=document.getElementById("holder");
-const info=document.getElementById("info");
+const infoCard=document.getElementById("infoCard");
+const foodName=document.getElementById("foodName");
+const foodPrice=document.getElementById("foodPrice");
+const viewCount=document.getElementById("viewCount");
+const avgRating=document.getElementById("avgRating");
+const orderCount=document.getElementById("orderCount");
 const loading=document.getElementById("loading");
+const loadingText=document.getElementById("loadingText");
+const loadingProgress=document.getElementById("loadingProgress");
 const toast=document.getElementById("toast");
 const ratingMenu=document.getElementById("ratingMenu");
 const cartModal=document.getElementById("cartModal");
@@ -386,11 +763,18 @@ const cartBadge=document.getElementById("cartBadge");
 const totalPrice=document.getElementById("totalPrice");
 const emptyCart=document.getElementById("emptyCart");
 const cartTotal=document.getElementById("cartTotal");
+const itemCount=document.getElementById("itemCount");
+const filterMenu=document.getElementById("filterMenu");
+const favoriteBtn=document.getElementById("favoriteBtn");
 
 let index=0, rating=0;
 let yaw=0,pitch=0,scale=foods[0].scale;
 let autoRotate=true;
 let cart=[];
+let favorites=[];
+let compareList=[];
+let currentFilter="all";
+let currentCategory="all";
 
 const models=[];
 let loadedCount=0;
@@ -399,7 +783,7 @@ let loadedCount=0;
 function showToast(t){
  toast.textContent=t;
  toast.style.opacity=1;
- setTimeout(()=>toast.style.opacity=0,1200);
+ setTimeout(()=>toast.style.opacity=0,1800);
 }
 
 function updateStars(){
@@ -426,8 +810,12 @@ function updateCartDisplay(){
   emptyCart.style.display="block";
   cartTotal.style.display="none";
   checkoutBtn.disabled=true;
+  itemCount.textContent="";
   return;
  }
+ 
+ const totalItems=cart.reduce((sum,item)=>sum+item.qty,0);
+ itemCount.textContent=`${totalItems} item${totalItems>1?'s':''}`;
  
  emptyCart.style.display="none";
  cartTotal.style.display="flex";
@@ -452,12 +840,24 @@ function updateCartDisplay(){
 }
 
 function changeQty(idx,delta){
+ if(!cart[idx]) return;
  cart[idx].qty+=delta;
  if(cart[idx].qty<=0){
   cart.splice(idx,1);
  }
  updateCartBadge();
  updateCartDisplay();
+}
+
+function updateFavoriteBtn(){
+ const isFav=favorites.includes(foods[index].name);
+ if(isFav){
+  favoriteBtn.classList.add("favorited");
+  favoriteBtn.innerHTML="💖 Favorited";
+ }else{
+  favoriteBtn.classList.remove("favorited");
+  favoriteBtn.innerHTML="❤️ Favorite";
+ }
 }
 
 /* ---------- Preload all models ---------- */
@@ -471,10 +871,15 @@ foods.forEach((food,i)=>{
  
  m.addEventListener("model-loaded",()=>{
   loadedCount++;
-  loading.textContent=`Loading models… ${loadedCount}/${foods.length}`;
+  const progress=(loadedCount/foods.length)*100;
+  loadingProgress.style.width=progress+"%";
+  loadingText.textContent=`Loading models… ${loadedCount}/${foods.length}`;
   if(loadedCount===foods.length){
-   loading.style.display="none";
-   showFood(0);
+   setTimeout(()=>{
+    loading.style.display="none";
+    showFood(0);
+    showToast("Welcome to FoodAR! 👋");
+   },300);
   }
  });
 });
@@ -488,17 +893,124 @@ function showFood(i){
  models[i].object3D.scale.set(scale,scale,scale);
  yaw=pitch=0;
  models[i].object3D.rotation.set(0,0,0);
- info.textContent=`${foods[i].name} • ₹${foods[i].price}`;
+ 
+ const food=foods[i];
+ foodName.textContent=food.name;
+ foodPrice.textContent=`₹${food.price}`;
+ viewCount.textContent=food.views;
+ avgRating.textContent=food.rating.toFixed(1);
+ orderCount.textContent=food.orders;
+ 
  rating=0;
  updateStars();
  autoRotate=true;
+ updateRotateBtn();
+ updateFavoriteBtn();
+}
+
+function resetView(){
+ if(!models[index]) return;
+ scale=foods[index].scale;
+ models[index].object3D.scale.set(scale,scale,scale);
+ yaw=pitch=0;
+ models[index].object3D.rotation.set(0,0,0);
+ autoRotate=true;
+ updateRotateBtn();
+ showToast("View reset 🔄");
+}
+
+function toggleAutoRotate(){
+ autoRotate=!autoRotate;
+ updateRotateBtn();
+ showToast(autoRotate?"Auto-rotate ON ↻":"Auto-rotate OFF");
+}
+
+function updateRotateBtn(){
+ const btn=document.getElementById("toggleRotate");
+ if(autoRotate){
+  btn.classList.add("active");
+ }else{
+  btn.classList.remove("active");
+ }
 }
 
 /* ---------- UI ---------- */
-left.onclick=()=>{ index=(index+foods.length-1)%foods.length; showFood(index); }
-right.onclick=()=>{ index=(index+1)%foods.length; showFood(index); }
+document.getElementById("left").onclick=()=>{ 
+ index=(index+foods.length-1)%foods.length; 
+ showFood(index); 
+ ratingMenu.classList.remove("show");
+};
 
-addCart.onclick=()=>{
+document.getElementById("right").onclick=()=>{ 
+ index=(index+1)%foods.length; 
+ showFood(index);
+ ratingMenu.classList.remove("show");
+};
+
+document.getElementById("resetBtn").onclick=resetView;
+document.getElementById("toggleRotate").onclick=toggleAutoRotate;
+
+document.getElementById("shareBtn").onclick=()=>{
+ const food=foods[index];
+ showToast(`Sharing ${food.name}... 📤`);
+};
+
+document.getElementById("filterBtn").onclick=()=>{
+ filterMenu.classList.toggle("show");
+};
+
+document.getElementById("favoriteBtn").onclick=()=>{
+ const foodName=foods[index].name;
+ const idx=favorites.indexOf(foodName);
+ if(idx>-1){
+  favorites.splice(idx,1);
+  showToast("Removed from favorites");
+ }else{
+  favorites.push(foodName);
+  showToast("Added to favorites ❤️");
+ }
+ updateFavoriteBtn();
+};
+
+document.getElementById("rateBtn").onclick=()=>{
+ ratingMenu.classList.toggle("show");
+};
+
+document.getElementById("compareBtn").onclick=()=>{
+ const foodName=foods[index].name;
+ const idx=compareList.indexOf(foodName);
+ if(idx>-1){
+  compareList.splice(idx,1);
+  showToast("Removed from comparison");
+ }else{
+  if(compareList.length>=3){
+   showToast("Max 3 items for comparison");
+   return;
+  }
+  compareList.push(foodName);
+  showToast(`Added to compare (${compareList.length}/3)`);
+ }
+};
+
+document.querySelectorAll('[data-filter]').forEach(chip=>{
+ chip.onclick=()=>{
+  document.querySelectorAll('[data-filter]').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  currentFilter=chip.dataset.filter;
+  showToast(`Filter: ${chip.textContent}`);
+ };
+});
+
+document.querySelectorAll('[data-category]').forEach(chip=>{
+ chip.onclick=()=>{
+  document.querySelectorAll('[data-category]').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  currentCategory=chip.dataset.category;
+  showToast(`Category: ${chip.textContent}`);
+ };
+});
+
+document.getElementById("addCart").onclick=()=>{
  const food=foods[index];
  const existing=cart.find(item=>item.name===food.name);
  
@@ -509,31 +1021,32 @@ addCart.onclick=()=>{
  }
  
  updateCartBadge();
- showToast(`${food.name} added to cart!`);
+ showToast(`${food.name} added to cart! 🛒`);
+ ratingMenu.classList.add("show");
 };
 
-viewCart.onclick=()=>{
+document.getElementById("viewCart").onclick=()=>{
  updateCartDisplay();
  cartModal.style.display="flex";
 };
 
-closeCart.onclick=()=>{
+document.getElementById("closeCart").onclick=()=>{
  cartModal.style.display="none";
 };
 
-checkout.onclick=()=>{
+document.getElementById("checkout").onclick=()=>{
  if(cart.length===0){
   showToast("Cart is empty!");
   return;
  }
  const total=cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
- showToast(`Order placed: ₹${total}`);
+ showToast(`Order placed: ₹${total} ✅`);
  cart=[];
  updateCartBadge();
  updateCartDisplay();
  setTimeout(()=>{
   cartModal.style.display="none";
- },800);
+ },1000);
 };
 
 cartModal.onclick=(e)=>{
@@ -544,9 +1057,14 @@ cartModal.onclick=(e)=>{
 
 document.querySelectorAll(".star").forEach(s=>{
  s.onclick=()=>{
-  rating=s.dataset.s;
+  const currentRating=parseInt(s.dataset.s);
+  rating=currentRating;
   updateStars();
   showToast(`Rated ${rating} ★`);
+  
+  setTimeout(()=>{
+   ratingMenu.classList.remove("show");
+  },1200);
  };
 });
 
@@ -559,54 +1077,86 @@ function dist(a,b){
  return Math.sqrt(dx*dx+dy*dy);
 }
 
-function start(x,y){
+function start(x,y,e){
+ if(e && e.target && (
+  e.target.classList.contains('nav-btn') ||
+  e.target.classList.contains('action-btn') ||
+  e.target.classList.contains('quick-btn') ||
+  e.target.classList.contains('top-btn') ||
+  e.target.classList.contains('star') ||
+  e.target.id==='viewCart' ||
+  e.target.closest('#cartModal') ||
+  e.target.closest('#filterMenu')
+ )) return;
+ 
  dragging=true; lx=x; ly=y; autoRotate=false;
+ updateRotateBtn();
 }
+
 function move(x,y){
+ if(!models[index]) return;
  yaw+=(x-lx)*0.01;
  pitch+=(y-ly)*0.01;
  pitch=Math.max(-1.4,Math.min(1.4,pitch));
  lx=x; ly=y;
  models[index].object3D.rotation.set(pitch,yaw,0);
 }
+
 function end(){
  dragging=false;
- setTimeout(()=>autoRotate=true,2000);
+ setTimeout(()=>{
+  autoRotate=true;
+  updateRotateBtn();
+ },2000);
 }
 
-/* Touch */
 document.addEventListener("touchstart",e=>{
- if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY);
+ if(e.touches.length===1) start(e.touches[0].clientX,e.touches[0].clientY,e);
  if(e.touches.length===2) zoom=dist(e.touches[0],e.touches[1]);
 });
+
 document.addEventListener("touchmove",e=>{
  if(e.touches.length===2){
   const d=dist(e.touches[0],e.touches[1]);
-  scale*=d/zoom;
-  models[index].object3D.scale.set(scale,scale,scale);
+  if(models[index]){
+   scale*=d/zoom;
+   models[index].object3D.scale.set(scale,scale,scale);
+  }
   zoom=d;
  }
  if(dragging && e.touches.length===1)
   move(e.touches[0].clientX,e.touches[0].clientY);
 });
+
 document.addEventListener("touchend",end);
 
-/* Mouse */
-document.addEventListener("mousedown",e=>start(e.clientX,e.clientY));
+document.addEventListener("mousedown",e=>start(e.clientX,e.clientY,e));
 document.addEventListener("mousemove",e=>dragging&&move(e.clientX,e.clientY));
 document.addEventListener("mouseup",end);
+
 document.addEventListener("wheel",e=>{
+ if(e.target.classList.contains('nav-btn') ||
+    e.target.classList.contains('action-btn') ||
+    e.target.classList.contains('quick-btn') ||
+    e.target.classList.contains('top-btn') ||
+    e.target.id==='viewCart' ||
+    e.target.closest('#cartModal') ||
+    e.target.closest('#filterMenu')) return;
+ 
+ if(!models[index]) return;
+    
  scale+=e.deltaY*-0.001;
  models[index].object3D.scale.set(scale,scale,scale);
 });
 
-/* Auto rotate */
-AFRAME.registerComponent("spin",{tick:()=>{
- if(autoRotate){
-  yaw+=0.002;
-  models[index].object3D.rotation.y=yaw;
+AFRAME.registerComponent("spin",{
+ tick:function(){
+  if(autoRotate && models[index]){
+   yaw+=0.002;
+   models[index].object3D.rotation.y=yaw;
+  }
  }
-}});
+});
 holder.setAttribute("spin","");
 </script>
 
