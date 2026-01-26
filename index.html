@@ -179,7 +179,7 @@ body{
 
 #navButtons{
   display:flex;
-  gap:24px;
+  gap:12px;
   margin-bottom:16px;
   justify-content:center;
 }
@@ -203,6 +203,18 @@ body{
 .nav-btn:active{
   transform:scale(.94);
   background:rgba(50,50,55,.95);
+}
+
+#addCart{
+  flex:1;
+  max-width:200px;
+  background:linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
+  border-color:rgba(31,122,255,.3);
+  font-weight:700;
+  font-size:16px;
+  box-shadow:0 4px 20px rgba(31,122,255,.4);
+  border-radius:16px;
+  height:56px;
 }
 
 /* ---------- FAB ---------- */
@@ -688,6 +700,7 @@ a-scene {
 <div id="controls">
   <div id="navButtons">
     <button class="nav-btn" id="left">‹</button>
+    <button class="nav-btn" id="addCart">Add to Cart</button>
     <button class="nav-btn" id="right">›</button>
   </div>
 </div>
@@ -968,6 +981,20 @@ document.getElementById("checkout").onclick=()=>{
  },1000);
 };
 
+document.getElementById("addCart").onclick=()=>{
+ const food=foods[index];
+ const existing=cart.find(item=>item.name===food.name);
+
+ if(existing){
+  existing.qty++;
+ }else{
+  cart.push({name:food.name,price:food.price,qty:1});
+ }
+
+ updateCartBadge();
+ showToast(`${food.name} added to cart! 🛒`);
+};
+
 cartModal.onclick=(e)=>{
  if(e.target===cartModal){
   cartModal.style.display="none";
@@ -1059,24 +1086,6 @@ document.querySelectorAll(".star").forEach(s=>{
    ratingMenu.classList.remove("show");
   },1200);
  };
-});
-
-// FAB as add to cart
-fab.addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (!fabMenu.classList.contains("show")) {
-    const food=foods[index];
-    const existing=cart.find(item=>item.name===food.name);
-
-    if(existing){
-      existing.qty++;
-    }else{
-      cart.push({name:food.name,price:food.price,qty:1});
-    }
-
-    updateCartBadge();
-    showToast(`${food.name} added to cart! 🛒`);
-  }
 });
 
 /* ---------- Input (Touch + Mouse) ---------- */
