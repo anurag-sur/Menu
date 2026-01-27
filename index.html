@@ -208,70 +208,17 @@ body{
   background:rgba(50,50,55,.95);
 }
 
-/* ---------- FAB ---------- */
-.fab {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(31, 122, 255, 0.4);
-  transition: all 0.3s;
-}
-
-.fab.active {
-  background: #ff3b30;
-}
-
-.fab.active .fab-icon::before {
-  content: "✕";
-}
-
-.fab-menu {
-  position: fixed;
-  bottom: 96px;
-  right: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 99;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-
-.fab-menu.show {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.fab-menu-item {
-  width: 48px;
-  height: 48px;
-  background: rgba(40, 40, 45, 0.85);
-  border-radius: 50%;
-  color: white;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+#addCart{
+  flex:1;
+  max-width:200px;
+  background:linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
+  border-color:rgba(31,122,255,.3);
+  font-weight:700;
+  font-size:16px;
+  box-shadow:0 4px 20px rgba(31,122,255,.4);
+  border-radius:16px;
+  height:56px;
   border: none;
-  transition: all 0.2s;
-}
-
-.fab-menu-item:active {
-  transform: scale(0.9);
-  background: rgba(60, 60, 65, 0.95);
 }
 
 /* ---------- Filter Menu ---------- */
@@ -655,6 +602,12 @@ a-scene {
     font-size: 20px;
   }
   
+  #addCart {
+    height: 48px;
+    font-size: 14px;
+    max-width: 140px;
+  }
+  
   #infoCard {
     top: 70px;
     padding: 10px 14px;
@@ -795,18 +748,9 @@ a-scene {
 <div id="controls">
   <div id="navButtons">
     <button class="nav-btn" id="left">‹</button>
+    <button class="nav-btn" id="addCart">Add to Cart</button>
     <button class="nav-btn" id="right">›</button>
   </div>
-</div>
-
-<!-- FAB -->
-<div id="fab" class="fab">
-  <div class="fab-icon">🛒</div>
-</div>
-<div id="fabMenu" class="fab-menu">
-  <button class="fab-menu-item" id="favoriteFab">❤️</button>
-  <button class="fab-menu-item" id="rateFab">⭐</button>
-  <button class="fab-menu-item" id="compareFab">⚖️</button>
 </div>
 
 <!-- Rating -->
@@ -878,8 +822,6 @@ const emptyCart=document.getElementById("emptyCart");
 const cartTotal=document.getElementById("cartTotal");
 const itemCount=document.getElementById("itemCount");
 const filterMenu=document.getElementById("filterMenu");
-const fab = document.getElementById("fab");
-const fabMenu = document.getElementById("fabMenu");
 const ratingMenu = document.getElementById("ratingMenu");
 
 let index=0, rating=0;
@@ -890,7 +832,6 @@ let favorites=[];
 let compareList=[];
 let currentFilter="all";
 let currentCategory="all";
-let fabTimeout;
 
 const models=[];
 let loadedCount=0;
@@ -1075,36 +1016,18 @@ document.getElementById("checkout").onclick=()=>{
  },1000);
 };
 
-// FAB now adds to cart
-fab.onclick = (e) => {
-  e.stopPropagation();
-  const food=foods[index];
-  const existing=cart.find(item=>item.name===food.name);
+document.getElementById("addCart").onclick=()=>{
+ const food=foods[index];
+ const existing=cart.find(item=>item.name===food.name);
 
-  if(existing){
-   existing.qty++;
-  }else{
-   cart.push({name:food.name,price:food.price,qty:1});
-  }
+ if(existing){
+  existing.qty++;
+ }else{
+  cart.push({name:food.name,price:food.price,qty:1});
+ }
 
-  updateCartBadge();
-  showToast(`${food.name} added to cart! 🛒`);
-  
-  // Also toggle menu if clicking the icon area
-  if (e.target.closest('.fab-icon')) {
-    if (fabMenu.classList.contains("show")) {
-      fabMenu.classList.remove("show");
-      fab.classList.remove("active");
-    } else {
-      fabMenu.classList.add("show");
-      fab.classList.add("active");
-      clearTimeout(fabTimeout);
-      fabTimeout = setTimeout(() => {
-        fabMenu.classList.remove("show");
-        fab.classList.remove("active");
-      }, 3000);
-    }
-  }
+ updateCartBadge();
+ showToast(`${food.name} added to cart! 🛒`);
 };
 
 cartModal.onclick=(e)=>{
@@ -1129,15 +1052,6 @@ document.querySelectorAll('[data-category]').forEach(chip=>{
   currentCategory=chip.dataset.category;
   showToast(`Category: ${chip.textContent}`);
  };
-});
-
-fabMenu.addEventListener("click", (e) => {
-  e.stopPropagation();
-});
-
-document.addEventListener("click", () => {
-  fabMenu.classList.remove("show");
-  fab.classList.remove("active");
 });
 
 document.getElementById("favoriteFab").onclick=()=>{
@@ -1203,8 +1117,7 @@ function start(x,y,e){
   e.target.id==='viewCart' ||
   e.target.closest('#cartModal') ||
   e.target.closest('#filterMenu') ||
-  e.target.closest('#fab') ||
-  e.target.closest('#fabMenu')
+  e.target.closest('#ratingMenu')
  )) return;
 
  dragging=true; lx=x; ly=y; autoRotate=false;
@@ -1260,8 +1173,7 @@ document.addEventListener("wheel",e=>{
     e.target.id==='viewCart' ||
     e.target.closest('#cartModal') ||
     e.target.closest('#filterMenu') ||
-    e.target.closest('#fab') ||
-    e.target.closest('#fabMenu')) return;
+    e.target.closest('#ratingMenu')) return;
 
  if(!models[index]) return;
 
