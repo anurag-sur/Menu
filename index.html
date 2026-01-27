@@ -183,6 +183,7 @@ body{
   gap:12px;
   margin-bottom:16px;
   justify-content:center;
+  align-items: center;
 }
 
 .nav-btn{
@@ -199,6 +200,7 @@ body{
   align-items:center;
   justify-content:center;
   backdrop-filter:blur(10px);
+  flex-shrink: 0;
 }
 
 .nav-btn:active{
@@ -216,6 +218,7 @@ body{
   box-shadow:0 4px 20px rgba(31,122,255,.4);
   border-radius:16px;
   height:56px;
+  border: none;
 }
 
 /* ---------- FAB ---------- */
@@ -740,6 +743,692 @@ a-scene {
     font-size: 16px;
   }
 }
+
+/* ---------- Favorites Modal ---------- */
+#favoritesModal{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+#favoritesContent{
+  background:rgba(20,20,22,.98);
+  border-radius:24px;
+  padding:28px 24px;
+  width:90%;
+  max-width:420px;
+  max-height:80vh;
+  overflow-y:auto;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+#favoritesHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+#favoritesHeader h2{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
+}
+
+.favorite-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  background:rgba(40,40,45,.6);
+  border-radius:14px;
+  margin-bottom:12px;
+  border:1px solid rgba(255,255,255,.05);
+}
+
+.favorite-item-info{
+  flex:1;
+}
+
+.favorite-item-name{
+  font-weight:600;
+  font-size:15px;
+  margin-bottom:4px;
+}
+
+.favorite-item-price{
+  color:rgba(255,255,255,.5);
+  font-size:13px;
+}
+
+.favorite-item-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.fav-action-btn{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:rgba(60,60,65,.8);
+  border:1px solid rgba(255,255,255,.1);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s;
+}
+
+.fav-action-btn:active{
+  background:rgba(80,80,85,.9);
+  transform:scale(.9);
+}
+
+.fav-action-btn.add{
+  background:rgba(31,122,255,.8);
+}
+
+#emptyFavorites{
+  text-align:center;
+  padding:40px 20px;
+  color:rgba(255,255,255,.4);
+  font-size:15px;
+}
+
+/* ---------- Compare Modal ---------- */
+#compareModal{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+#compareContent{
+  background:rgba(20,20,22,.98);
+  border-radius:24px;
+  padding:28px 24px;
+  width:95%;
+  max-width:600px;
+  max-height:80vh;
+  overflow-y:auto;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+#compareHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+#compareHeader h2{
+  margin:0;
+  font-size:24px;
+  font-weight:700;
+}
+
+.compare-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.compare-item{
+  background:rgba(40,40,45,.6);
+  border-radius:14px;
+  padding:16px;
+  border:1px solid rgba(255,255,255,.05);
+  text-align:center;
+}
+
+.compare-item-name{
+  font-weight:600;
+  font-size:14px;
+  margin-bottom:8px;
+}
+
+.compare-item-price{
+  color:#4CAF50;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.compare-item-stats{
+  font-size:11px;
+  color:rgba(255,255,255,.5);
+  margin-bottom:12px;
+}
+
+.compare-item-rating{
+  color:#FFD54F;
+  font-size:14px;
+  margin-bottom:12px;
+}
+
+.compare-remove-btn{
+  width:100%;
+  padding:8px;
+  border-radius:8px;
+  background:rgba(255,59,48,.8);
+  border:none;
+  color:white;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+}
+
+.compare-remove-btn:active{
+  transform:scale(.96);
+}
+
+#emptyCompare{
+  text-align:center;
+  padding:40px 20px;
+  color:rgba(255,255,255,.4);
+  font-size:15px;
+}
+
+.compare-actions{
+  display:flex;
+  gap:12px;
+}
+
+.compare-actions button{
+  flex:1;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s;
+}
+
+.compare-actions button:active{
+  transform:scale(.96);
+}
+
+#closeCompare{
+  background:rgba(60,60,65,.8);
+  color:white;
+  border:1px solid rgba(255,255,255,.1);
+}
+
+#clearCompare{
+  background:rgba(255,59,48,.8);
+  color:white;
+}
+
+/* ---------- Voice Search ---------- */
+#voiceBtn{
+  position:absolute;
+  top:60px;
+  right:20px;
+  width:44px;
+  height:44px;
+  background:rgba(31,122,255,.9);
+  border:1px solid rgba(31,122,255,.3);
+  border-radius:50%;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 16px rgba(31,122,255,.3);
+}
+
+#voiceBtn:active{
+  transform:scale(.95);
+  background:rgba(31,122,255,1);
+}
+
+#voiceBtn.listening{
+  animation:pulse 1.5s infinite;
+  background:#ff3b30;
+  border-color:rgba(255,59,48,.3);
+}
+
+@keyframes pulse{
+  0%,100%{ transform:scale(1); box-shadow:0 0 0 0 rgba(255,59,48,.4); }
+  50%{ transform:scale(1.05); box-shadow:0 0 0 10px rgba(255,59,48,0); }
+}
+
+/* ---------- Search Results ---------- */
+#searchResults{
+  position:absolute;
+  top:110px;
+  right:20px;
+  width:280px;
+  max-height:300px;
+  background:rgba(20,20,22,.95);
+  backdrop-filter:blur(20px);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.1);
+  padding:12px;
+  display:none;
+  z-index:5;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  overflow-y:auto;
+}
+
+#searchResults.show{
+  display:block;
+}
+
+.search-result-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .15s;
+  margin-bottom:8px;
+}
+
+.search-result-item:last-child{
+  margin-bottom:0;
+}
+
+.search-result-item:hover{
+  background:rgba(40,40,45,.6);
+}
+
+.search-result-icon{
+  width:40px;
+  height:40px;
+  background:rgba(31,122,255,.2);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.search-result-info{
+  flex:1;
+}
+
+.search-result-name{
+  font-weight:600;
+  font-size:14px;
+  margin-bottom:2px;
+}
+
+.search-result-price{
+  color:#4CAF50;
+  font-size:12px;
+}
+
+/* ---------- Nutrition Info ---------- */
+#nutritionModal{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+#nutritionContent{
+  background:rgba(20,20,22,.98);
+  border-radius:24px;
+  padding:28px 24px;
+  width:90%;
+  max-width:380px;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+#nutritionHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+#nutritionHeader h2{
+  margin:0;
+  font-size:20px;
+  font-weight:700;
+}
+
+.nutrition-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.nutrition-item{
+  background:rgba(40,40,45,.6);
+  border-radius:12px;
+  padding:16px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.05);
+}
+
+.nutrition-value{
+  font-size:24px;
+  font-weight:700;
+  color:#1f7aff;
+  margin-bottom:4px;
+}
+
+.nutrition-label{
+  font-size:12px;
+  color:rgba(255,255,255,.5);
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.nutrition-bar{
+  height:6px;
+  background:rgba(255,255,255,.1);
+  border-radius:3px;
+  margin-top:8px;
+  overflow:hidden;
+}
+
+.nutrition-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg, #1f7aff, #0066ff);
+  border-radius:3px;
+  transition:width .3s;
+}
+
+#closeNutrition{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  background:rgba(60,60,65,.8);
+  color:white;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s;
+}
+
+#closeNutrition:active{
+  transform:scale(.96);
+  background:rgba(80,80,85,.9);
+}
+
+/* ---------- AR Instructions ---------- */
+#arInstructions{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  background:rgba(20,20,22,.95);
+  backdrop-filter:blur(20px);
+  border-radius:20px;
+  padding:24px;
+  text-align:center;
+  z-index:50;
+  display:none;
+  border:1px solid rgba(255,255,255,.1);
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  max-width:300px;
+}
+
+#arInstructions.show{
+  display:block;
+}
+
+.ar-instruction-icon{
+  font-size:48px;
+  margin-bottom:16px;
+}
+
+.ar-instruction-text{
+  font-size:16px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.ar-instruction-subtext{
+  font-size:13px;
+  color:rgba(255,255,255,.5);
+  margin-bottom:20px;
+}
+
+#arInstructions button{
+  padding:12px 24px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
+  color:white;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s;
+}
+
+#arInstructions button:active{
+  transform:scale(.96);
+}
+
+/* ---------- Dark Mode Toggle ---------- */
+#darkModeToggle{
+  position:absolute;
+  top:60px;
+  left:20px;
+  width:44px;
+  height:44px;
+  background:rgba(30,30,32,.9);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+  transition:all .15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:5;
+  backdrop-filter:blur(10px);
+}
+
+#darkModeToggle:active{
+  transform:scale(.95);
+  background:rgba(50,50,55,.9);
+}
+
+body.light-mode{
+  background:#f5f5f7;
+  color:#1a1a1a;
+}
+
+body.light-mode #topBar{
+  background:linear-gradient(180deg, rgba(255,255,255,.8) 0%, transparent 100%);
+}
+
+body.light-mode #infoCard,
+body.light-mode #filterMenu,
+body.light-mode #searchResults,
+body.light-mode #arInstructions{
+  background:rgba(255,255,255,.95);
+  border-color:rgba(0,0,0,.1);
+  color:#1a1a1a;
+}
+
+body.light-mode .quick-btn,
+body.light-mode .nav-btn,
+body.light-mode .top-btn,
+body.light-mode #darkModeToggle{
+  background:rgba(255,255,255,.9);
+  border-color:rgba(0,0,0,.1);
+  color:#1a1a1a;
+}
+
+body.light-mode #foodStats,
+body.light-mode .search-result-price,
+body.light-mode .ar-instruction-subtext{
+  color:rgba(0,0,0,.5);
+}
+
+body.light-mode .filter-chip{
+  background:rgba(0,0,0,.05);
+  border-color:rgba(0,0,0,.1);
+  color:#1a1a1a;
+}
+
+body.light-mode .filter-chip.active{
+  background:rgba(31,122,255,.8);
+  color:white;
+}
+
+/* ---------- Gesture Hint ---------- */
+#gestureHint{
+  position:absolute;
+  bottom:100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(10px);
+  padding:8px 16px;
+  border-radius:20px;
+  font-size:12px;
+  color:rgba(255,255,255,.7);
+  z-index:5;
+  opacity:0;
+  transition:opacity .3s;
+  pointer-events:none;
+}
+
+#gestureHint.show{
+  opacity:1;
+}
+
+/* ---------- Recently Viewed ---------- */
+#recentlyViewed{
+  position:absolute;
+  bottom:200px;
+  left:20px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  z-index:5;
+}
+
+.recent-item{
+  width:48px;
+  height:48px;
+  background:rgba(30,30,32,.88);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .15s;
+  font-size:24px;
+  backdrop-filter:blur(10px);
+}
+
+.recent-item:hover{
+  transform:scale(1.1);
+  background:rgba(50,50,55,.9);
+}
+
+.recent-item.active{
+  border-color:#1f7aff;
+  box-shadow:0 0 0 2px rgba(31,122,255,.3);
+}
+
+body.light-mode .recent-item{
+  background:rgba(255,255,255,.9);
+  border-color:rgba(0,0,0,.1);
+}
+
+/* ---------- Quantity Selector ---------- */
+#quantitySelector{
+  position:absolute;
+  bottom:100px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(20,20,22,.95);
+  backdrop-filter:blur(20px);
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.1);
+  padding:12px 20px;
+  display:none;
+  align-items:center;
+  gap:16px;
+  z-index:5;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+
+#quantitySelector.show{
+  display:flex;
+}
+
+.qty-display{
+  font-size:18px;
+  font-weight:700;
+  min-width:30px;
+  text-align:center;
+}
+
+.qty-nav-btn{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:rgba(40,40,45,.6);
+  border:1px solid rgba(255,255,255,.1);
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all .15s;
+}
+
+.qty-nav-btn:active{
+  transform:scale(.9);
+  background:rgba(60,60,65,.8);
+}
+
+body.light-mode #quantitySelector{
+  background:rgba(255,255,255,.95);
+  border-color:rgba(0,0,0,.1);
+}
+
+body.light-mode .qty-nav-btn{
+  background:rgba(0,0,0,.05);
+  border-color:rgba(0,0,0,.1);
+  color:#1a1a1a;
+}
+
+body.light-mode .qty-display{
+  color:#1a1a1a;
+}
 </style>
 </head>
 
@@ -756,6 +1445,15 @@ a-scene {
     </button>
   </div>
 </div>
+
+<!-- Dark Mode Toggle -->
+<button id="darkModeToggle">🌙</button>
+
+<!-- Voice Search -->
+<button id="voiceBtn">🎤</button>
+
+<!-- Search Results -->
+<div id="searchResults"></div>
 
 <!-- Info Card -->
 <div id="infoCard">
@@ -798,11 +1496,26 @@ a-scene {
   </div>
 </div>
 
+<!-- Gesture Hint -->
+<div id="gestureHint">👆 Drag to rotate • 🤏 Pinch to zoom</div>
+
+<!-- Recently Viewed -->
+<div id="recentlyViewed"></div>
+
 <!-- Quick Actions -->
 <div id="quickActions">
   <button class="quick-btn" id="resetBtn">🔄</button>
   <button class="quick-btn active" id="toggleRotate">↻</button>
   <button class="quick-btn" id="shareBtn">📤</button>
+  <button class="quick-btn" id="nutritionBtn">🥗</button>
+  <button class="quick-btn" id="arBtn">📱</button>
+</div>
+
+<!-- Quantity Selector -->
+<div id="quantitySelector">
+  <button class="qty-nav-btn" id="qtyMinus">−</button>
+  <span class="qty-display" id="qtyDisplay">1</span>
+  <button class="qty-nav-btn" id="qtyPlus">+</button>
 </div>
 
 <!-- Main Controls -->
@@ -822,6 +1535,7 @@ a-scene {
   <button class="fab-menu-item" id="favoriteFab">❤️</button>
   <button class="fab-menu-item" id="rateFab">⭐</button>
   <button class="fab-menu-item" id="compareFab">⚖️</button>
+  <button class="fab-menu-item" id="viewFavoritesFab">📋</button>
 </div>
 
 <!-- Rating -->
@@ -853,6 +1567,75 @@ a-scene {
   </div>
 </div>
 
+<!-- Favorites Modal -->
+<div id="favoritesModal">
+  <div id="favoritesContent">
+    <div id="favoritesHeader">
+      <h2>Your Favorites</h2>
+      <button class="top-btn" id="closeFavorites">✕</button>
+    </div>
+    <div id="favoritesItems"></div>
+    <div id="emptyFavorites">No favorites yet ❤️</div>
+  </div>
+</div>
+
+<!-- Compare Modal -->
+<div id="compareModal">
+  <div id="compareContent">
+    <div id="compareHeader">
+      <h2>Compare Items</h2>
+      <button class="top-btn" id="closeCompare">✕</button>
+    </div>
+    <div id="compareItems"></div>
+    <div id="emptyCompare">Add items to compare ⚖️</div>
+    <div class="compare-actions">
+      <button id="closeCompareBtn">Close</button>
+      <button id="clearCompare">Clear All</button>
+    </div>
+  </div>
+</div>
+
+<!-- Nutrition Modal -->
+<div id="nutritionModal">
+  <div id="nutritionContent">
+    <div id="nutritionHeader">
+      <h2>Nutrition Info</h2>
+      <button class="top-btn" id="closeNutrition">✕</button>
+    </div>
+    <div class="nutrition-grid" id="nutritionGrid">
+      <div class="nutrition-item">
+        <div class="nutrition-value" id="calories">0</div>
+        <div class="nutrition-label">Calories</div>
+        <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 0%"></div></div>
+      </div>
+      <div class="nutrition-item">
+        <div class="nutrition-value" id="protein">0g</div>
+        <div class="nutrition-label">Protein</div>
+        <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 0%"></div></div>
+      </div>
+      <div class="nutrition-item">
+        <div class="nutrition-value" id="carbs">0g</div>
+        <div class="nutrition-label">Carbs</div>
+        <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 0%"></div></div>
+      </div>
+      <div class="nutrition-item">
+        <div class="nutrition-value" id="fat">0g</div>
+        <div class="nutrition-label">Fat</div>
+        <div class="nutrition-bar"><div class="nutrition-bar-fill" style="width: 0%"></div></div>
+      </div>
+    </div>
+    <button id="closeNutritionBtn">Close</button>
+  </div>
+</div>
+
+<!-- AR Instructions -->
+<div id="arInstructions">
+  <div class="ar-instruction-icon">📱</div>
+  <div class="ar-instruction-text">AR Mode Ready</div>
+  <div class="ar-instruction-subtext">Point your camera at a flat surface to place the food</div>
+  <button id="startAR">Start AR</button>
+</div>
+
 <a-scene embedded vr-mode-ui="enabled:false"
          arjs="sourceType:webcam; debugUIEnabled:false;">
   <a-entity light="type:ambient;intensity:0.8"></a-entity>
@@ -863,15 +1646,15 @@ a-scene {
 
 <script>
 const foods=[
- {model:"models/burger/scene.gltf",name:"Burger",price:149,scale:.4,category:"western",views:1250,rating:4.5,orders:342},
- {model:"models/pizza/scene.gltf",name:"Pizza",price:299,scale:2,category:"western",views:2100,rating:4.8,orders:521},
- {model:"models/fries/scene.gltf",name:"Fries",price:99,scale:.5,category:"western",views:890,rating:4.2,orders:267},
- {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:129,scale:6,category:"healthy",views:456,rating:4.3,orders:89},
- {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:89,scale:6,category:"indian",views:1567,rating:4.7,orders:423},
- {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:49,scale:6,category:"western",views:678,rating:4.1,orders:198},
- {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:79,scale:6,category:"indian",views:1123,rating:4.6,orders:312},
- {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:89,scale:.01,category:"healthy",views:345,rating:4.0,orders:76},
- {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5,category:"indian",views:2345,rating:4.9,orders:678}
+ {model:"models/burger/scene.gltf",name:"Burger",price:149,scale:.4,category:"western",views:1250,rating:4.5,orders:342,calories:295,protein:17,carbs:30,fat:14},
+ {model:"models/pizza/scene.gltf",name:"Pizza",price:299,scale:2,category:"western",views:2100,rating:4.8,orders:521,calories:266,protein:11,carbs:33,fat:10},
+ {model:"models/fries/scene.gltf",name:"Fries",price:99,scale:.5,category:"western",views:890,rating:4.2,orders:267,calories:312,protein:3,carbs:41,fat:15},
+ {model:"models/assorted_salad/scene.gltf",name:"Assorted Salad",price:129,scale:6,category:"healthy",views:456,rating:4.3,orders:89,calories:152,protein:5,carbs:12,fat:10},
+ {model:"models/chole_bhature/scene.gltf",name:"Chole Bhature",price:89,scale:6,category:"indian",views:1567,rating:4.7,orders:423,calories:450,protein:12,carbs:58,fat:20},
+ {model:"models/grilled_sandwich/scene.gltf",name:"Grilled Sandwich",price:49,scale:6,category:"western",views:678,rating:4.1,orders:198,calories:220,protein:8,carbs:28,fat:9},
+ {model:"models/palak_paneer/scene.gltf",name:"Palak Paneer",price:79,scale:6,category:"indian",views:1123,rating:4.6,orders:312,calories:280,protein:14,carbs:15,fat:20},
+ {model:"models/potato_salad/scene.gltf",name:"Potato Salad",price:89,scale:.01,category:"healthy",views:345,rating:4.0,orders:76,calories:143,protein:3,carbs:17,fat:8},
+ {model:"models/samosa/scene.gltf",name:"Samosa",price:39,scale:.5,category:"indian",views:2345,rating:4.9,orders:678,calories:262,protein:4,carbs:32,fat:14}
 ];
 
 const holder=document.getElementById("holder");
@@ -896,6 +1679,20 @@ const filterMenu=document.getElementById("filterMenu");
 const fab = document.getElementById("fab");
 const fabMenu = document.getElementById("fabMenu");
 const ratingMenu = document.getElementById("ratingMenu");
+const favoritesModal = document.getElementById("favoritesModal");
+const favoritesItems = document.getElementById("favoritesItems");
+const emptyFavorites = document.getElementById("emptyFavorites");
+const compareModal = document.getElementById("compareModal");
+const compareItems = document.getElementById("compareItems");
+const emptyCompare = document.getElementById("emptyCompare");
+const nutritionModal = document.getElementById("nutritionModal");
+const voiceBtn = document.getElementById("voiceBtn");
+const searchResults = document.getElementById("searchResults");
+const gestureHint = document.getElementById("gestureHint");
+const recentlyViewed = document.getElementById("recentlyViewed");
+const quantitySelector = document.getElementById("quantitySelector");
+const qtyDisplay = document.getElementById("qtyDisplay");
+const arInstructions = document.getElementById("arInstructions");
 
 let index=0, rating=0;
 let yaw=0,pitch=0,scale=foods[0].scale;
@@ -906,6 +1703,10 @@ let compareList=[];
 let currentFilter="all";
 let currentCategory="all";
 let fabTimeout;
+let currentQty = 1;
+let recentlyViewedList = [];
+let isDarkMode = true;
+let isListening = false;
 
 const models=[];
 let loadedCount=0;
@@ -987,6 +1788,198 @@ function updateRotateBtn(){
  }
 }
 
+function updateFavoritesDisplay(){
+ if(favorites.length===0){
+  favoritesItems.innerHTML="";
+  emptyFavorites.style.display="block";
+  return;
+ }
+ 
+ emptyFavorites.style.display="none";
+ favoritesItems.innerHTML=favorites.map((name,idx)=>{
+  const food=foods.find(f=>f.name===name);
+  return`<div class="favorite-item">
+   <div class="favorite-item-info">
+    <div class="favorite-item-name">${food.name}</div>
+    <div class="favorite-item-price">₹${food.price}</div>
+   </div>
+   <div class="favorite-item-actions">
+    <button class="fav-action-btn add" onclick="addToCartFromFavorites('${food.name}')">🛒</button>
+    <button class="fav-action-btn" onclick="removeFromFavorites(${idx})">🗑️</button>
+   </div>
+  </div>`;
+ }).join("");
+}
+
+function updateCompareDisplay(){
+ if(compareList.length===0){
+  compareItems.innerHTML="";
+  emptyCompare.style.display="block";
+  return;
+ }
+ 
+ emptyCompare.style.display="none";
+ compareItems.innerHTML=`<div class="compare-grid">${compareList.map((name,idx)=>{
+  const food=foods.find(f=>f.name===name);
+  return`<div class="compare-item">
+   <div class="compare-item-name">${food.name}</div>
+   <div class="compare-item-price">₹${food.price}</div>
+   <div class="compare-item-rating">⭐ ${food.rating}</div>
+   <div class="compare-item-stats">${food.views} views • ${food.orders} orders</div>
+   <button class="compare-remove-btn" onclick="removeFromCompare(${idx})">Remove</button>
+  </div>`;
+ }).join('')}</div>`;
+}
+
+function updateRecentlyViewed(){
+ const container = document.getElementById("recentlyViewed");
+ if(recentlyViewedList.length === 0){
+  container.innerHTML = "";
+  return;
+ }
+ 
+ container.innerHTML = recentlyViewedList.slice(-5).map((name, idx) => {
+  const food = foods.find(f => f.name === name);
+  const isActive = foods[index].name === name;
+  return `<div class="recent-item ${isActive ? 'active' : ''}" onclick="jumpToFood('${name}')" title="${food.name}">🍽️</div>`;
+ }).join("");
+}
+
+function jumpToFood(name){
+ const idx = foods.findIndex(f => f.name === name);
+ if(idx !== -1){
+  index = idx;
+  showFood(index);
+ }
+}
+
+function addToCartFromFavorites(name){
+ const food=foods.find(f=>f.name===name);
+ const existing=cart.find(item=>item.name===food.name);
+ if(existing){
+  existing.qty++;
+ }else{
+  cart.push({name:food.name,price:food.price,qty:1});
+ }
+ updateCartBadge();
+ showToast(`${food.name} added to cart! 🛒`);
+}
+
+function removeFromFavorites(idx){
+ favorites.splice(idx,1);
+ updateFavoritesDisplay();
+ showToast("Removed from favorites");
+}
+
+function removeFromCompare(idx){
+ compareList.splice(idx,1);
+ updateCompareDisplay();
+ showToast("Removed from comparison");
+}
+
+function addToRecentlyViewed(name){
+ if(!recentlyViewedList.includes(name)){
+  recentlyViewedList.push(name);
+  if(recentlyViewedList.length > 5){
+   recentlyViewedList.shift();
+  }
+  updateRecentlyViewed();
+ }
+}
+
+function showNutrition(){
+ const food = foods[index];
+ document.getElementById("calories").textContent = food.calories;
+ document.getElementById("protein").textContent = food.protein + "g";
+ document.getElementById("carbs").textContent = food.carbs + "g";
+ document.getElementById("fat").textContent = food.fat + "g";
+ 
+ const maxCalories = 500;
+ const maxProtein = 50;
+ const maxCarbs = 100;
+ const maxFat = 50;
+ 
+ document.querySelectorAll(".nutrition-bar-fill")[0].style.width = Math.min((food.calories/maxCalories)*100, 100) + "%";
+ document.querySelectorAll(".nutrition-bar-fill")[1].style.width = Math.min((food.protein/maxProtein)*100, 100) + "%";
+ document.querySelectorAll(".nutrition-bar-fill")[2].style.width = Math.min((food.carbs/maxCarbs)*100, 100) + "%";
+ document.querySelectorAll(".nutrition-bar-fill")[3].style.width = Math.min((food.fat/maxFat)*100, 100) + "%";
+ 
+ nutritionModal.style.display = "flex";
+}
+
+function toggleDarkMode(){
+ isDarkMode = !isDarkMode;
+ document.body.classList.toggle("light-mode");
+ document.getElementById("darkModeToggle").textContent = isDarkMode ? "🌙" : "☀️";
+ showToast(isDarkMode ? "Dark mode enabled 🌙" : "Light mode enabled ☀️");
+}
+
+function startVoiceSearch(){
+ if(!('webkitSpeechRecognition' in window)){
+  showToast("Voice search not supported");
+  return;
+ }
+ 
+ if(isListening){
+  recognition.stop();
+  return;
+ }
+ 
+ const recognition = new webkitSpeechRecognition();
+ recognition.lang = 'en-US';
+ recognition.continuous = false;
+ recognition.interimResults = false;
+ 
+ recognition.onstart = () => {
+  isListening = true;
+  voiceBtn.classList.add("listening");
+  showToast("Listening... 🎤");
+ };
+ 
+ recognition.onend = () => {
+  isListening = false;
+  voiceBtn.classList.remove("listening");
+ };
+ 
+ recognition.onresult = (event) => {
+  const transcript = event.results[0][0].transcript.toLowerCase();
+  showToast(`You said: "${transcript}"`);
+  
+  const matches = foods.filter(f => f.name.toLowerCase().includes(transcript) || 
+                                   f.category.toLowerCase().includes(transcript));
+  
+  if(matches.length > 0){
+   displaySearchResults(matches);
+  }else{
+   showToast("No matches found");
+  }
+ };
+ 
+ recognition.start();
+}
+
+function displaySearchResults(matches){
+ searchResults.innerHTML = matches.map(food => `
+  <div class="search-result-item" onclick="selectSearchResult('${food.name}')">
+   <div class="search-result-icon">🍽️</div>
+   <div class="search-result-info">
+    <div class="search-result-name">${food.name}</div>
+    <div class="search-result-price">₹${food.price}</div>
+   </div>
+  </div>
+ `).join("");
+ searchResults.classList.add("show");
+}
+
+function selectSearchResult(name){
+ const idx = foods.findIndex(f => f.name === name);
+ if(idx !== -1){
+  index = idx;
+  showFood(index);
+  searchResults.classList.remove("show");
+ }
+}
+
 /* ---------- Preload all models ---------- */
 foods.forEach((food,i)=>{
  const m=document.createElement("a-entity");
@@ -1006,6 +1999,10 @@ foods.forEach((food,i)=>{
     loading.style.display="none";
     showFood(0);
     showToast("Welcome to FoodAR! 👋");
+    setTimeout(() => {
+     gestureHint.classList.add("show");
+     setTimeout(() => gestureHint.classList.remove("show"), 4000);
+    }, 1000);
    },300);
   }
  });
@@ -1032,6 +2029,12 @@ function showFood(i){
  updateStars();
  autoRotate=true;
  updateRotateBtn();
+ 
+ addToRecentlyViewed(food.name);
+ updateRecentlyViewed();
+ 
+ foods[i].views++;
+ viewCount.textContent = foods[i].views;
 }
 
 function resetView(){
@@ -1059,11 +2062,20 @@ document.getElementById("toggleRotate").onclick=toggleAutoRotate;
 
 document.getElementById("shareBtn").onclick=()=>{
  const food=foods[index];
- showToast(`Sharing ${food.name}... 📤`);
+ if(navigator.share){
+  navigator.share({
+   title: `Check out ${food.name} on FoodAR!`,
+   text: `Delicious ${food.name} for just ₹${food.price}`,
+   url: window.location.href
+  });
+ }else{
+  showToast(`Sharing ${food.name}... 📤`);
+ }
 };
 
 document.getElementById("filterBtn").onclick=()=>{
  filterMenu.classList.toggle("show");
+ searchResults.classList.remove("show");
 };
 
 document.getElementById("viewCart").onclick=()=>{
@@ -1085,24 +2097,52 @@ document.getElementById("checkout").onclick=()=>{
  cart=[];
  updateCartBadge();
  updateCartDisplay();
+ foods.forEach(f => {
+  cart.forEach(item => {
+   if(f.name === item.name) f.orders += item.qty;
+  });
+ });
  setTimeout(()=>{
   cartModal.style.display="none";
  },1000);
 };
 
 document.getElementById("addCart").onclick=()=>{
- const food=foods[index];
- const existing=cart.find(item=>item.name===food.name);
-
- if(existing){
-  existing.qty++;
- }else{
-  cart.push({name:food.name,price:food.price,qty:1});
- }
-
- updateCartBadge();
- showToast(`${food.name} added to cart! 🛒`);
+ quantitySelector.classList.add("show");
 };
+
+document.getElementById("qtyMinus").onclick = () => {
+ if(currentQty > 1){
+  currentQty--;
+  qtyDisplay.textContent = currentQty;
+ }
+};
+
+document.getElementById("qtyPlus").onclick = () => {
+ if(currentQty < 10){
+  currentQty++;
+  qtyDisplay.textContent = currentQty;
+ }
+};
+
+quantitySelector.addEventListener("click", (e) => {
+ if(e.target === quantitySelector){
+  const food=foods[index];
+  const existing=cart.find(item=>item.name===food.name);
+
+  if(existing){
+   existing.qty += currentQty;
+  }else{
+   cart.push({name:food.name,price:food.price,qty:currentQty});
+  }
+
+  updateCartBadge();
+  showToast(`${currentQty}x ${food.name} added! 🛒`);
+  quantitySelector.classList.remove("show");
+  currentQty = 1;
+  qtyDisplay.textContent = currentQty;
+ }
+});
 
 cartModal.onclick=(e)=>{
  if(e.target===cartModal){
@@ -1151,6 +2191,7 @@ fabMenu.addEventListener("click", (e) => {
 document.addEventListener("click", () => {
   fabMenu.classList.remove("show");
   fab.classList.remove("active");
+  searchResults.classList.remove("show");
 });
 
 document.getElementById("favoriteFab").onclick=()=>{
@@ -1185,17 +2226,71 @@ document.getElementById("compareFab").onclick=()=>{
  }
 };
 
+document.getElementById("viewFavoritesFab").onclick=()=>{
+ updateFavoritesDisplay();
+ favoritesModal.style.display="flex";
+};
+
+document.getElementById("closeFavorites").onclick=()=>{
+ favoritesModal.style.display="none";
+};
+
+favoritesModal.onclick=(e)=>{
+ if(e.target===favoritesModal){
+  favoritesModal.style.display="none";
+ }
+};
+
+document.getElementById("closeCompare").onclick=()=>{
+ compareModal.style.display="none";
+};
+
+document.getElementById("closeCompareBtn").onclick=()=>{
+ compareModal.style.display="none";
+};
+
+document.getElementById("clearCompare").onclick=()=>{
+ compareList = [];
+ updateCompareDisplay();
+ showToast("Comparison cleared");
+};
+
+compareModal.onclick=(e)=>{
+ if(e.target===compareModal){
+  compareModal.style.display="none";
+ }
+};
+
 document.querySelectorAll(".star").forEach(s=>{
  s.onclick=()=>{
   const currentRating=parseInt(s.dataset.s);
   rating=currentRating;
   updateStars();
+  foods[index].rating = ((foods[index].rating * foods[index].views) + rating) / (foods[index].views + 1);
+  avgRating.textContent = foods[index].rating.toFixed(1);
   showToast(`Rated ${rating} ★`);
   setTimeout(()=>{
    ratingMenu.classList.remove("show");
   },1200);
  };
 });
+
+document.getElementById("nutritionBtn").onclick = showNutrition;
+document.getElementById("closeNutrition").onclick = () => nutritionModal.style.display = "none";
+document.getElementById("closeNutritionBtn").onclick = () => nutritionModal.style.display = "none";
+nutritionModal.onclick = (e) => { if(e.target === nutritionModal) nutritionModal.style.display = "none"; };
+
+document.getElementById("darkModeToggle").onclick = toggleDarkMode;
+voiceBtn.onclick = startVoiceSearch;
+
+document.getElementById("arBtn").onclick = () => {
+ arInstructions.classList.add("show");
+};
+
+document.getElementById("startAR").onclick = () => {
+ arInstructions.classList.remove("show");
+ showToast("AR mode activated 📱");
+};
 
 /* ---------- Input (Touch + Mouse) ---------- */
 let dragging=false,lx=0,ly=0,zoom=0;
@@ -1217,7 +2312,12 @@ function start(x,y,e){
   e.target.closest('#cartModal') ||
   e.target.closest('#filterMenu') ||
   e.target.closest('#fab') ||
-  e.target.closest('#fabMenu')
+  e.target.closest('#fabMenu') ||
+  e.target.closest('#quantitySelector') ||
+  e.target.closest('#favoritesModal') ||
+  e.target.closest('#compareModal') ||
+  e.target.closest('#nutritionModal') ||
+  e.target.closest('#arInstructions')
  )) return;
 
  dragging=true; lx=x; ly=y; autoRotate=false;
@@ -1274,7 +2374,8 @@ document.addEventListener("wheel",e=>{
     e.target.closest('#cartModal') ||
     e.target.closest('#filterMenu') ||
     e.target.closest('#fab') ||
-    e.target.closest('#fabMenu')) return;
+    e.target.closest('#fabMenu') ||
+    e.target.closest('#quantitySelector')) return;
 
  if(!models[index]) return;
 
