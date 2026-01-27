@@ -217,6 +217,72 @@ body{
   height:56px;
 }
 
+/* ---------- FAB ---------- */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(31, 122, 255, 0.4);
+  transition: all 0.3s;
+}
+
+.fab.active {
+  background: #ff3b30;
+}
+
+.fab.active .fab-icon::before {
+  content: "✕";
+}
+
+.fab-menu {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.fab-menu.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.fab-menu-item {
+  width: 48px;
+  height: 48px;
+  background: rgba(40, 40, 45, 0.85);
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.fab-menu-item:active {
+  transform: scale(0.9);
+  background: rgba(60, 60, 65, 0.95);
+}
+
 /* ---------- Filter Menu ---------- */
 #filterMenu{
   position:absolute;
@@ -549,7 +615,9 @@ a-scene {
 #filterMenu,
 .fab,
 .fab-menu {
-  pointer-events: auto;
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* Scrollbar for cart */
@@ -1120,6 +1188,3 @@ holder.setAttribute("spin","");
 
 </body>
 </html>
-
-
-
