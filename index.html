@@ -183,7 +183,6 @@ body{
   gap:12px;
   margin-bottom:16px;
   justify-content:center;
-  align-items: center;
 }
 
 .nav-btn{
@@ -200,7 +199,6 @@ body{
   align-items:center;
   justify-content:center;
   backdrop-filter:blur(10px);
-  flex-shrink: 0;
 }
 
 .nav-btn:active{
@@ -218,7 +216,72 @@ body{
   box-shadow:0 4px 20px rgba(31,122,255,.4);
   border-radius:16px;
   height:56px;
+}
+
+/* ---------- FAB ---------- */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #1f7aff 0%, #0066ff 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(31, 122, 255, 0.4);
+  transition: all 0.3s;
+}
+
+.fab.active {
+  background: #ff3b30;
+}
+
+.fab.active .fab-icon::before {
+  content: "✕";
+}
+
+.fab-menu {
+  position: fixed;
+  bottom: 96px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.fab-menu.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.fab-menu-item {
+  width: 48px;
+  height: 48px;
+  background: rgba(40, 40, 45, 0.85);
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   border: none;
+  transition: all 0.2s;
+}
+
+.fab-menu-item:active {
+  transform: scale(0.9);
+  background: rgba(60, 60, 65, 0.95);
 }
 
 /* ---------- Filter Menu ---------- */
@@ -576,7 +639,7 @@ a-scene {
     left: auto;
     right: 20px;
     top: auto;
-    bottom: 100px;
+    bottom: 140px;
     transform: none;
     flex-direction: row;
   }
@@ -630,12 +693,10 @@ a-scene {
     width: 56px;
     height: 56px;
     font-size: 22px;
-    bottom: 20px;
-    right: 20px;
   }
   
   .fab-menu {
-    bottom: 84px;
+    bottom: 88px;
     right: 20px;
   }
   
@@ -646,7 +707,7 @@ a-scene {
   }
   
   #ratingMenu {
-    bottom: 100px;
+    bottom: 120px;
   }
   
   .star {
@@ -753,6 +814,16 @@ a-scene {
   </div>
 </div>
 
+<!-- FAB -->
+<div id="fab" class="fab">
+  <div class="fab-icon">🛒</div>
+</div>
+<div id="fabMenu" class="fab-menu">
+  <button class="fab-menu-item" id="favoriteFab">❤️</button>
+  <button class="fab-menu-item" id="rateFab">⭐</button>
+  <button class="fab-menu-item" id="compareFab">⚖️</button>
+</div>
+
 <!-- Rating -->
 <div id="ratingMenu">
   <span class="star" data-s="1">★</span>
@@ -822,6 +893,8 @@ const emptyCart=document.getElementById("emptyCart");
 const cartTotal=document.getElementById("cartTotal");
 const itemCount=document.getElementById("itemCount");
 const filterMenu=document.getElementById("filterMenu");
+const fab = document.getElementById("fab");
+const fabMenu = document.getElementById("fabMenu");
 const ratingMenu = document.getElementById("ratingMenu");
 
 let index=0, rating=0;
@@ -832,6 +905,7 @@ let favorites=[];
 let compareList=[];
 let currentFilter="all";
 let currentCategory="all";
+let fabTimeout;
 
 const models=[];
 let loadedCount=0;
@@ -1054,6 +1128,31 @@ document.querySelectorAll('[data-category]').forEach(chip=>{
  };
 });
 
+fab.addEventListener("click", (e) => {
+  e.stopPropagation();
+  if (fabMenu.classList.contains("show")) {
+    fabMenu.classList.remove("show");
+    fab.classList.remove("active");
+  } else {
+    fabMenu.classList.add("show");
+    fab.classList.add("active");
+    clearTimeout(fabTimeout);
+    fabTimeout = setTimeout(() => {
+      fabMenu.classList.remove("show");
+      fab.classList.remove("active");
+    }, 3000);
+  }
+});
+
+fabMenu.addEventListener("click", (e) => {
+  e.stopPropagation();
+});
+
+document.addEventListener("click", () => {
+  fabMenu.classList.remove("show");
+  fab.classList.remove("active");
+});
+
 document.getElementById("favoriteFab").onclick=()=>{
  const foodName=foods[index].name;
  const idx=favorites.indexOf(foodName);
@@ -1117,7 +1216,8 @@ function start(x,y,e){
   e.target.id==='viewCart' ||
   e.target.closest('#cartModal') ||
   e.target.closest('#filterMenu') ||
-  e.target.closest('#ratingMenu')
+  e.target.closest('#fab') ||
+  e.target.closest('#fabMenu')
  )) return;
 
  dragging=true; lx=x; ly=y; autoRotate=false;
@@ -1173,7 +1273,8 @@ document.addEventListener("wheel",e=>{
     e.target.id==='viewCart' ||
     e.target.closest('#cartModal') ||
     e.target.closest('#filterMenu') ||
-    e.target.closest('#ratingMenu')) return;
+    e.target.closest('#fab') ||
+    e.target.closest('#fabMenu')) return;
 
  if(!models[index]) return;
 
